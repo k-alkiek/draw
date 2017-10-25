@@ -2,9 +2,13 @@ package controllers.interfaces;
 
 import models.interfaces.Shape;
 
+/**
+ * Created by khaledabdelfattah on 10/24/17.
+ */
 public interface DrawingEngine {
+
     /* redraw all shapes on the canvas */
-    public void refresh(java.awt.Graphics canvas);
+    public void refresh(javafx.scene.canvas.GraphicsContext canvas);
 
     public void addShape(Shape shape);
     public void removeShape(Shape shape);
