@@ -1,4 +1,4 @@
-package models.commands;
+package controllers.commands;
 
 /**
  * Created by khaledabdelfattah on 10/25/17.

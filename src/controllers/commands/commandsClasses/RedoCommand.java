@@ -1,6 +1,6 @@
-package models.commands.commandsClasses;
+package controllers.commands.commandsClasses;
 
-import models.commands.ICommand;
+import controllers.commands.ICommand;
 
 /**
  * Created by khaledabdelfattah on 10/24/17.

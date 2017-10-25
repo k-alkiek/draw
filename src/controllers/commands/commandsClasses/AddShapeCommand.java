@@ -1,6 +1,6 @@
-package models.commands.commandsClasses;
+package controllers.commands.commandsClasses;
 
-import models.commands.ICommand;
+import controllers.commands.ICommand;
 import models.interfaces.Shape;
 
 import java.util.List;

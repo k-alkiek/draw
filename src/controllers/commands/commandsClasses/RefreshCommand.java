@@ -1,7 +1,7 @@
-package models.commands.commandsClasses;
+package controllers.commands.commandsClasses;
 
 import javafx.scene.canvas.GraphicsContext;
-import models.commands.ICommand;
+import controllers.commands.ICommand;
 import models.interfaces.Shape;
 
 import java.util.List;
