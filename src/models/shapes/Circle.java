@@ -13,21 +13,22 @@ public class Circle extends AbstractShape {
     public Circle () {
         super();
         shapeProperties = new HashMap<>();
-        shapeProperties.put("raduis", 0.0);
+        shapeProperties.put("radius", 0.0);
     }
 
     @Override
     public void draw(GraphicsContext canvas) {
+        Double radius = shapeProperties.get("radius");
         canvas.setFill(fillColor);
-        canvas.fillOval(centrePoint.getX(),
-                centrePoint.getY(),
-                shapeProperties.get("raduis"),
-                shapeProperties.get("raduis"));
+        canvas.fillOval(centrePoint.getX() - radius,
+                centrePoint.getY() - radius,
+                radius * 2,
+                radius * 2);
         canvas.setStroke(perimeterColor);
-        canvas.strokeOval(centrePoint.getX(),
-                centrePoint.getY(),
-                shapeProperties.get("raduis"),
-                shapeProperties.get("raduis"));
+        canvas.strokeOval(centrePoint.getX() - radius,
+                centrePoint.getY() - radius,
+                radius * 2,
+                radius * 2);
     }
 
     @Override

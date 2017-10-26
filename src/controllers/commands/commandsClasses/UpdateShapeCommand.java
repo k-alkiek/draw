@@ -11,21 +11,23 @@ import java.util.Stack;
  */
 public class UpdateShapeCommand implements ICommand {
     private List<Shape> shapes;
-    private Stack<Shape> currentShapes;
     private Shape oldShape, newShape;
+    private int index;
     public UpdateShapeCommand (List<Shape> shapes,
-                               Stack<Shape> currentShapes,
                                Shape oldShape,
                                Shape newShape) {
         this.shapes = shapes;
-        this.currentShapes = currentShapes;
         this.oldShape = oldShape;
         this.newShape = newShape;
+        index = shapes.indexOf(oldShape);
     }
     @Override
     public void execute() {
-        int index = shapes.indexOf(oldShape);
-        currentShapes.push(oldShape);
         shapes.set(index, newShape);
+    }
+
+    @Override
+    public void unexecute() {
+        shapes.set(index, oldShape);
     }
 }

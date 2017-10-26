@@ -11,18 +11,21 @@ import java.util.Stack;
  */
 public class RemoveShapeCommand implements ICommand {
     private List<Shape> shapes;
-    private Stack<Shape> currentShapes;
     private Shape shape;
+    private int index;
     public RemoveShapeCommand(List<Shape> shapes,
-                              Stack<Shape> currentShapes,
                               Shape shape) {
         this.shapes = shapes;
-        this.currentShapes = currentShapes;
         this.shape = shape;
+        index = shapes.indexOf(shape);
     }
     @Override
     public void execute() {
-        currentShapes.push(shape);
-        shapes.remove(shapes.indexOf(shape));
+        shapes.remove(index);
+    }
+
+    @Override
+    public void unexecute() {
+        shapes.add(shape);
     }
 }

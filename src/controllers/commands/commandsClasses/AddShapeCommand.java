@@ -1,6 +1,7 @@
 package controllers.commands.commandsClasses;
 
 import controllers.commands.ICommand;
+import javafx.scene.canvas.GraphicsContext;
 import models.interfaces.Shape;
 
 import java.util.List;
@@ -9,14 +10,19 @@ import java.util.List;
  * Created by khaledabdelfattah on 10/24/17.
  */
 public class AddShapeCommand implements ICommand {
-    private List<Shape> shapes;
     private Shape shape;
-    public AddShapeCommand(List<Shape> shapes, Shape shape) {
-        this.shapes = shapes;
+    private GraphicsContext canvas;
+    public AddShapeCommand(Shape shape, GraphicsContext canvas) {
         this.shape = shape;
+        this.canvas = canvas;
     }
     @Override
     public void execute() {
-        shapes.add(shape);
+        shape.draw(canvas);
+    }
+
+    @Override
+    public void unexecute() {
+
     }
 }
