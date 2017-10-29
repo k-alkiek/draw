@@ -1,6 +1,7 @@
 package models.shapes;
 
 import javafx.scene.canvas.GraphicsContext;
+import models.interfaces.Shape;
 
 import java.util.HashMap;
 
@@ -30,6 +31,8 @@ public class Line extends AbstractShape {
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        return null;
+        Shape newLine = new Line();
+        cloning(newLine, this);
+        return newLine;
     }
 }

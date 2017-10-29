@@ -14,10 +14,12 @@ public class Circle extends AbstractShape {
         super();
         shapeProperties = new HashMap<>();
         shapeProperties.put("radius", 0.0);
+        shapeProperties.put("borderWidth", 0.0);
     }
 
     @Override
     public void draw(GraphicsContext canvas) {
+        canvas.setLineWidth(shapeProperties.get("borderWidth"));
         Double radius = shapeProperties.get("radius");
         canvas.setFill(fillColor);
         canvas.fillOval(centrePoint.getX() - radius,

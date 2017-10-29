@@ -3,25 +3,21 @@ package controllers.commands.commandsClasses;
 import controllers.commands.ICommand;
 import models.interfaces.Shape;
 
-import java.util.List;
-import java.util.Stack;
+import java.util.ArrayList;
 
 /**
  * Created by khaledabdelfattah on 10/24/17.
  */
 public class RemoveShapeCommand implements ICommand {
-    private List<Shape> shapes;
+    private ArrayList<Shape> shapes;
     private Shape shape;
-    private int index;
-    public RemoveShapeCommand(List<Shape> shapes,
-                              Shape shape) {
+    public RemoveShapeCommand(Shape shape, ArrayList<Shape> shapes) {
         this.shapes = shapes;
         this.shape = shape;
-        index = shapes.indexOf(shape);
     }
     @Override
     public void execute() {
-        shapes.remove(index);
+        shapes.remove(shapes.indexOf(shape));
     }
 
     @Override

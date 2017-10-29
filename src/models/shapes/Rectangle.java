@@ -13,9 +13,11 @@ public class Rectangle extends AbstractShape {
         shapeProperties = new HashMap<>();
         shapeProperties.put("height", 0.0);
         shapeProperties.put("width", 0.0);
+        shapeProperties.put("borderWidth", 0.0);
     }
     @Override
     public void draw(GraphicsContext canvas) {
+        canvas.setLineWidth(shapeProperties.get("borderWidth"));
         canvas.setFill(fillColor);
         canvas.fillRect(centrePoint.getX(),
                 centrePoint.getY(),
