@@ -5,16 +5,16 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import models.interfaces.Shape;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Created by khaledabdelfattah on 10/25/17.
  */
-public abstract class AbstractShape implements Shape {
+public abstract class AbstractShape implements Shape, Serializable {
     protected Point2D centrePoint;
     protected Map<String, Double> shapeProperties;
     protected Color perimeterColor, fillColor;
-
     public AbstractShape() {
     }
 

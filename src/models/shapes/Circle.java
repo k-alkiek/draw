@@ -3,12 +3,13 @@ package models.shapes;
 import javafx.scene.canvas.GraphicsContext;
 import models.interfaces.Shape;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by khaledabdelfattah on 10/23/17.
  */
-public class Circle extends AbstractShape {
+public class Circle extends AbstractShape implements Serializable {
 
     public Circle () {
         super();
