@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXBadge?>
 <?import com.jfoenix.controls.JFXColorPicker?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXSlider?>
@@ -17,7 +17,6 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="539.0" prefWidth="819.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SampleController">
    <children>
       <HBox prefHeight="29.0" prefWidth="802.0">
@@ -33,8 +32,9 @@
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Undo" />
+                    <items>
+
+                      <MenuItem mnemonicParsing="false" text="Undo" />
                         <MenuItem mnemonicParsing="false" text="Redo" />
                         <MenuItem mnemonicParsing="false" text="Delete" />
                   </items>
@@ -50,12 +50,12 @@
       </HBox>
       <BorderPane prefHeight="512.0" prefWidth="736.0" style="-fx-background-color: #616161;">
          <center>
-            <Canvas fx:id="canvas" height="394.0" width="575.0" BorderPane.alignment="CENTER" />
+            <Canvas fx:id="canvas" height="424.0" width="598.0" />
          </center>
          <top>
-            <ToolBar prefHeight="51.0" prefWidth="802.0" BorderPane.alignment="CENTER">
+            <ToolBar prefHeight="46.0" prefWidth="819.0" BorderPane.alignment="CENTER">
               <items>
-                  <JFXComboBox fx:id="toolsComboBox" prefHeight="26.0" prefWidth="89.0" />
+                  <JFXComboBox fx:id="toolsComboBox" prefHeight="29.0" prefWidth="89.0" />
                   <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="37.0" text="Fill " />
                   <JFXColorPicker fx:id="fillColorPicker" prefHeight="26.0" prefWidth="84.0" />
                   <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="63.0" text="Stroke " />
@@ -63,13 +63,9 @@
                   <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="75.0" text="Thickness" />
                   <JFXSlider fx:id="strokeSlider" max="30.0" value="10.0" />
                   <Canvas fx:id="strokePreviewCanvas" height="30.0" width="30.0" />
-                  <Group>
-                     <children>
-                        <JFXButton onAction="#undo" prefHeight="3.0" prefWidth="52.0" text="Undo" />
-                        <JFXButton layoutX="56.0" onAction="#redo" prefHeight="26.0" prefWidth="52.0" text="Redo" />
-                        <JFXButton layoutX="112.0" onAction="#save" prefHeight="26.0" prefWidth="52.0" text="Save" />
-                     </children>
-                  </Group>
+                  <JFXBadge fx:id="undoBadge" prefHeight="34.0" prefWidth="35.0" />
+                  <JFXBadge fx:id="redoBadge" prefHeight="34.0" prefWidth="35.0" />
+                  <JFXBadge fx:id="saveBadge" prefHeight="34.0" prefWidth="41.0" />
               </items>
             </ToolBar>
          </top>

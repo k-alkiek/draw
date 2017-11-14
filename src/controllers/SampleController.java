@@ -1,16 +1,16 @@
 package controllers;
 
-import com.jfoenix.controls.JFXColorPicker;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.*;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.*;
 
 import java.net.URL;
@@ -31,19 +31,49 @@ public class SampleController implements Initializable{
     @FXML JFXColorPicker selectedShapeStrokeColorPicker;
     @FXML JFXComboBox<?> shapesComboBox;
 
+    @FXML JFXBadge undoBadge;
+    @FXML JFXBadge redoBadge;
+    @FXML JFXBadge saveBadge;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initializeStrokePreview();
-        toolsComboBox.getItems().add(new Label("Circle"));
-        toolsComboBox.getItems().add(new Label("Rectangle"));
-        toolsComboBox.getItems().add(new Label("Triangle"));
+        initializeTools();
+        initializeBadges();
 
-        canvas.getGraphicsContext2D().setFill(Color.WHITE);
-        canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        Platform.runLater(() -> {
+        canvas.setOnDragDetected(event -> {
+            Point2D startPoint = new Point2D(event.getX(), event.getY());
+            canvas.setOnMouseDragged(m->{
+                double x = m.getX();
+                double y = m.getY();
+                System.out.println("X coord: " + x);
+                System.out.println("Y coord: " + y);
+                canvas.getGraphicsContext2D().setFill(strokeColorPicker.getValue());
+                canvas.getGraphicsContext2D().fillRect(x, y, strokeSlider.getValue(), strokeSlider.getValue());
 
-
+            });
         });
+
+    }
+
+    private void initializeBadges() {
+        FontAwesomeIconView undoIcon = new FontAwesomeIconView();
+        undoIcon.setGlyphName("UNDO");
+        StackPane s1 = new StackPane();
+        s1.getChildren().add(undoIcon);
+        undoBadge.getChildren().add(s1);
+
+        FontAwesomeIconView redoIcon = new FontAwesomeIconView();
+        redoIcon.setGlyphName("REPEAT");
+        StackPane s2 = new StackPane();
+        s2.getChildren().add(redoIcon);
+        redoBadge.getChildren().add(s2);
+
+        FontAwesomeIconView saveIcon = new FontAwesomeIconView();
+        saveIcon.setGlyphName("SAVE");
+        StackPane s3 = new StackPane();
+        s3.getChildren().add(saveIcon);
+        saveBadge.getChildren().add(s3);
     }
 
     @FXML
@@ -61,6 +91,23 @@ public class SampleController implements Initializable{
 
     }
 
+    private void initializeTools() {
+        toolsComboBox.getItems().add(new Label("Circle"));
+        toolsComboBox.getItems().add(new Label("Rectangle"));
+        toolsComboBox.getItems().add(new Label("Triangle"));
+
+        canvas.getGraphicsContext2D().setFill(Color.WHITE);
+        canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        System.out.println(canvas.getBoundsInLocal().getMinX());
+        System.out.println(canvas.getBoundsInLocal().getMinY());
+
+
+
+        Platform.runLater(() -> {
+
+        });
+    }
 
     private void initializeStrokePreview() {
         drawStrokePreview(strokeColorPicker.getValue(), strokeSlider.getValue());
