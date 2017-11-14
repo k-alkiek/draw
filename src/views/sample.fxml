@@ -1,8 +1,100 @@
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
+<?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import com.jfoenix.controls.JFXBadge?>
+<?import com.jfoenix.controls.JFXColorPicker?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXSlider?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Label?>
-<GridPane fx:controller="controllers.SampleController"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
-</GridPane>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="539.0" prefWidth="819.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SampleController">
+   <children>
+      <HBox prefHeight="29.0" prefWidth="802.0">
+         <children>
+            <MenuBar prefHeight="29.0" prefWidth="942.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                        <MenuItem mnemonicParsing="false" text="New Drawing" />
+                        <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem mnemonicParsing="false" text="Open Drawing" />
+                    <MenuItem mnemonicParsing="false" text="Quit" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+
+                      <MenuItem mnemonicParsing="false" text="Undo" />
+                        <MenuItem mnemonicParsing="false" text="Redo" />
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="About">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </children>
+      </HBox>
+      <BorderPane prefHeight="512.0" prefWidth="736.0" style="-fx-background-color: #616161;">
+         <center>
+            <Canvas fx:id="canvas" height="424.0" width="598.0" />
+         </center>
+         <top>
+            <ToolBar prefHeight="46.0" prefWidth="819.0" BorderPane.alignment="CENTER">
+              <items>
+                  <JFXComboBox fx:id="toolsComboBox" prefHeight="29.0" prefWidth="89.0" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="37.0" text="Fill " />
+                  <JFXColorPicker fx:id="fillColorPicker" prefHeight="26.0" prefWidth="84.0" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="63.0" text="Stroke " />
+                  <JFXColorPicker fx:id="strokeColorPicker" prefHeight="26.0" prefWidth="86.0" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="75.0" text="Thickness" />
+                  <JFXSlider fx:id="strokeSlider" max="30.0" value="10.0" />
+                  <Canvas fx:id="strokePreviewCanvas" height="30.0" width="30.0" />
+                  <JFXBadge fx:id="undoBadge" prefHeight="34.0" prefWidth="35.0" />
+                  <JFXBadge fx:id="redoBadge" prefHeight="34.0" prefWidth="35.0" />
+                  <JFXBadge fx:id="saveBadge" prefHeight="34.0" prefWidth="41.0" />
+              </items>
+            </ToolBar>
+         </top>
+         <left>
+            <VBox prefHeight="469.0" prefWidth="119.0" style="-fx-background-color: #EEE;" BorderPane.alignment="CENTER">
+               <children>
+                  <Group fx:id="selectedShapeGroup" disable="true">
+                     <children>
+                        <Region layoutX="12.0" prefHeight="15.0" prefWidth="119.0" />
+                        <Label alignment="CENTER" layoutX="12.0" layoutY="15.0" prefHeight="16.0" prefWidth="124.0" text="Selected Shape" />
+                        <Label alignment="BOTTOM_LEFT" layoutX="12.0" layoutY="31.0" prefHeight="31.0" prefWidth="57.0" text=" Fill" />
+                        <JFXColorPicker fx:id="selectedShapeFillColorPicker" layoutX="12.0" layoutY="62.0" prefHeight="26.0" prefWidth="118.0" />
+                        <Label alignment="BOTTOM_LEFT" layoutX="12.0" layoutY="88.0" prefHeight="31.0" prefWidth="57.0" text=" Stroke" />
+                        <JFXColorPicker fx:id="selectedShapeStrokeColorPicker" layoutX="12.0" layoutY="119.0" prefHeight="26.0" prefWidth="118.0" />
+                     </children>
+                  </Group>
+                  <Label prefHeight="16.0" prefWidth="152.0" text=" Shape Select">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <JFXComboBox fx:id="shapesComboBox" nodeOrientation="LEFT_TO_RIGHT" prefHeight="26.0" prefWidth="126.0">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" top="5.0" />
+                     </VBox.margin>
+                  </JFXComboBox>
+               </children>
+            </VBox>
+         </left>
+      </BorderPane>
+   </children>
+</VBox>
