@@ -13,12 +13,6 @@ public class Line extends AbstractShape implements Serializable {
 
     public Line () {
         super();
-        shapeProperties = new HashMap<>();
-        shapeProperties.put("x1", 0.0);
-        shapeProperties.put("y2", 0.0);
-        shapeProperties.put("x2", 0.0);
-        shapeProperties.put("y2", 0.0);
-        shapeProperties.put("borderWidth", 0.0);
     }
     @Override
     public void draw(GraphicsContext canvas) {

@@ -13,25 +13,21 @@ public class Circle extends AbstractShape implements Serializable {
 
     public Circle () {
         super();
-        shapeProperties = new HashMap<>();
-        shapeProperties.put("radius", 0.0);
-        shapeProperties.put("borderWidth", 0.0);
     }
 
     @Override
     public void draw(GraphicsContext canvas) {
         canvas.setLineWidth(shapeProperties.get("borderWidth"));
-        Double radius = shapeProperties.get("radius");
         canvas.setFill(fillColor);
-        canvas.fillOval(centrePoint.getX() - radius,
-                centrePoint.getY() - radius,
-                radius * 2,
-                radius * 2);
+        canvas.fillOval(shapeProperties.get("x1"),
+                shapeProperties.get("y1"),
+                width,
+                height);
         canvas.setStroke(perimeterColor);
-        canvas.strokeOval(centrePoint.getX() - radius,
-                centrePoint.getY() - radius,
-                radius * 2,
-                radius * 2);
+        canvas.strokeOval(shapeProperties.get("x1"),
+                shapeProperties.get("y1"),
+                width,
+                height);
     }
 
     @Override

@@ -6,47 +6,32 @@ import javafx.scene.paint.Color;
 import models.interfaces.Shape;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by khaledabdelfattah on 10/25/17.
  */
 public abstract class AbstractShape implements Shape, Serializable {
-    public Point2D centrePoint;
-    public Map<String, Double> shapeProperties;
-    public Color perimeterColor, fillColor;
+    protected Point2D centrePoint;
+    protected Map<String, Double> shapeProperties;
+    protected Color perimeterColor, fillColor;
+    protected double width, height;
 
-    public void setShapeProperties(Map<String, Double> shapeProperties) {
-        this.shapeProperties = shapeProperties;
-    }
-
-    public void setPerimeterColor(Color perimeterColor) {
-        this.perimeterColor = perimeterColor;
-    }
-
-    public Point2D getCentrePoint() {
-
-        return centrePoint;
-    }
-
-    public Map<String, Double> getShapeProperties() {
-        return shapeProperties;
-    }
-
-    public Color getPerimeterColor() {
-        return perimeterColor;
-    }
-
-    public void setCentrePoint (Point2D p) {
-        centrePoint = p;
-
-    }
     public AbstractShape() {
+        shapeProperties = new HashMap<>();
+        shapeProperties.put("x1", 0.0);
+        shapeProperties.put("y1", 0.0);
+        shapeProperties.put("x2", 0.0);
+        shapeProperties.put("y2", 0.0);
+        shapeProperties.put("borderWidth", 0.0);
     }
 
     @Override
     public void setPosition(Point2D position) {
         centrePoint = position;
+        shapeProperties.put("x1", position.getX());
+        shapeProperties.put("y1", position.getX());
     }
 
     @Override
@@ -95,5 +80,10 @@ public abstract class AbstractShape implements Shape, Serializable {
         newShape.setProperties(shapeProperties);
         newShape.setColor(perimeterColor);
         newShape.setFillColor(fillColor);
+    }
+
+    protected void setAtrributes() {
+        height = Math.abs(shapeProperties.get("y1") - shapeProperties.get("y2"));
+        width = Math.abs(shapeProperties.get("x1") - shapeProperties.get("x2"));
     }
 }

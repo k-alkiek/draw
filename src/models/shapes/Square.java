@@ -12,9 +12,6 @@ public class Square extends AbstractShape {
     private Shape rec = new Rectangle();
     public Square () {
         super();
-        shapeProperties = new HashMap<>();
-        shapeProperties.put("length", 0.0);
-        shapeProperties.put("borderWidth", 0.0);
     }
 
     @Override

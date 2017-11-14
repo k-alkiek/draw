@@ -13,10 +13,6 @@ public class RoundRectangle extends AbstractShape implements Serializable {
 
     public RoundRectangle () {
         super();
-        shapeProperties = new HashMap<>();
-        shapeProperties.put("width", 0.0);
-        shapeProperties.put("height", 0.0);
-        shapeProperties.put("arcWidth", 0.0);
         shapeProperties.put("arcLength", 0.0);
         shapeProperties.put("borderWidth", 0.0);
     }
@@ -24,17 +20,17 @@ public class RoundRectangle extends AbstractShape implements Serializable {
     public void draw(GraphicsContext canvas) {
         canvas.setLineWidth(shapeProperties.get("borderWidth"));
         canvas.setFill(fillColor);
-        canvas.fillRoundRect(centrePoint.getX(),
-                centrePoint.getY(),
-                shapeProperties.get("width"),
-                shapeProperties.get("height"),
+        canvas.fillRoundRect(shapeProperties.get("x1"),
+                shapeProperties.get("y1"),
+                width,
+                height,
                 shapeProperties.get("arcWidth"),
                 shapeProperties.get("arcHeight"));
         canvas.setStroke(perimeterColor);
-        canvas.strokeRoundRect(centrePoint.getX(),
-                centrePoint.getY(),
-                shapeProperties.get("width"),
-                shapeProperties.get("height"),
+        canvas.strokeRoundRect(shapeProperties.get("x1"),
+                shapeProperties.get("y1"),
+                width,
+                height,
                 shapeProperties.get("arcWidth"),
                 shapeProperties.get("arcHeight"));
     }

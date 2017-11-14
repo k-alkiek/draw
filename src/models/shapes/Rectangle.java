@@ -13,32 +13,24 @@ public class Rectangle extends AbstractShape implements Serializable {
 
     public Rectangle () {
         super();
-        shapeProperties = new HashMap<>();
-        shapeProperties.put("height", 0.0);
-        shapeProperties.put("width", 0.0);
-        shapeProperties.put("borderWidth", 0.0);
     }
     public Rectangle(double length) {
-        super();
-        shapeProperties = new HashMap<>();
-        shapeProperties.put("width", length);
-        shapeProperties.put("height", length);
-        shapeProperties.put("borderWidth", 0.0);
+        height = width = length;
     }
 
     @Override
     public void draw(GraphicsContext canvas) {
         canvas.setLineWidth(shapeProperties.get("borderWidth"));
         canvas.setFill(fillColor);
-        canvas.fillRect(centrePoint.getX(),
-                centrePoint.getY(),
-                shapeProperties.get("height"),
-                shapeProperties.get("width"));
+        canvas.fillRect(shapeProperties.get("x1"),
+                shapeProperties.get("y1"),
+                width,
+                height);
         canvas.setStroke(perimeterColor);
-        canvas.strokeRect(centrePoint.getX(),
-                centrePoint.getY(),
-                shapeProperties.get("height"),
-                shapeProperties.get("width"));
+        canvas.strokeRect(shapeProperties.get("x1"),
+                shapeProperties.get("y1"),
+                width,
+                height);
     }
 
     @Override

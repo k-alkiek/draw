@@ -13,27 +13,20 @@ public class Ellipse extends AbstractShape implements Serializable {
 
     public Ellipse () {
         super();
-        shapeProperties = new HashMap<>();
-        shapeProperties.put("height", 0.0);
-        shapeProperties.put("width", 0.0);
-        shapeProperties.put("borderWidth", 0.0);
     }
     @Override
     public void draw(GraphicsContext canvas) {
         canvas.setLineWidth(shapeProperties.get("borderWidth"));
-        Double height = shapeProperties.get("height"),
-        width = shapeProperties.get("width");
-
         canvas.setFill(fillColor);
-        canvas.fillOval(centrePoint.getX() - width,
-                centrePoint.getY() - height,
-                width * 2,
-                height * 2);
+        canvas.fillOval(shapeProperties.get("x1"),
+                shapeProperties.get("y1"),
+                width,
+                height);
         canvas.setStroke(perimeterColor);
-        canvas.strokeOval(centrePoint.getX() - width,
-                centrePoint.getY() - height,
-                width * 2,
-                height * 2);
+        canvas.strokeOval(shapeProperties.get("x1"),
+                shapeProperties.get("y1"),
+                width,
+                height);
     }
 
     @Override
