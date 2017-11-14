@@ -21,6 +21,12 @@ public class ShapesFactory implements IShapesFactory {
             newShape = new Ellipse();
         } else if (type.equals("models.shapes.RoundRectangle")) {
             newShape = new RoundRectangle();
+        } else if (type.equals("models.shapes.Triangle")) {
+            newShape = new Triangle();
+        } else if (type.equals("models.shapes.Square")) {
+            newShape = new Square();
+        } else if (type.equals("models.shapes.Polygon")) {
+            newShape = new Polygon();
         }
         return newShape;
     }

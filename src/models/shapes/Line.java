@@ -18,11 +18,11 @@ public class Line extends AbstractShape implements Serializable {
         shapeProperties.put("y2", 0.0);
         shapeProperties.put("x2", 0.0);
         shapeProperties.put("y2", 0.0);
-        shapeProperties.put("lineWidth", 0.0);
+        shapeProperties.put("borderWidth", 0.0);
     }
     @Override
     public void draw(GraphicsContext canvas) {
-        canvas.setLineWidth(shapeProperties.get("lineWidth"));
+        canvas.setLineWidth(shapeProperties.get("borderWidth"));
         canvas.setStroke(fillColor);
         canvas.strokeLine(shapeProperties.get("x1"),
                 shapeProperties.get("y1"),

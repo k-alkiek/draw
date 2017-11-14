@@ -10,12 +10,22 @@ import java.util.HashMap;
  * Created by khaledabdelfattah on 10/25/17.
  */
 public class Rectangle extends AbstractShape implements Serializable {
+
     public Rectangle () {
+        super();
         shapeProperties = new HashMap<>();
         shapeProperties.put("height", 0.0);
         shapeProperties.put("width", 0.0);
         shapeProperties.put("borderWidth", 0.0);
     }
+    public Rectangle(double length) {
+        super();
+        shapeProperties = new HashMap<>();
+        shapeProperties.put("width", length);
+        shapeProperties.put("height", length);
+        shapeProperties.put("borderWidth", 0.0);
+    }
+
     @Override
     public void draw(GraphicsContext canvas) {
         canvas.setLineWidth(shapeProperties.get("borderWidth"));

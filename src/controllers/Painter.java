@@ -5,19 +5,17 @@ import controllers.commands.commandsClasses.*;
 import controllers.interfaces.DrawingEngine;
 import javafx.scene.canvas.GraphicsContext;
 import models.interfaces.Shape;
+import models.shapes.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.EmptyStackException;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Created by khaledabdelfattah on 10/27/17.
  */
 public class Painter implements DrawingEngine {
-    
+
     private ICommand add, remove, update;
     private ArrayList<Shape> shapes;
     private Stack<ICommand> commands, undoCommands;
@@ -29,6 +27,7 @@ public class Painter implements DrawingEngine {
         commands = new Stack<>();
         undoCommands = new Stack<>();
     }
+
     @Override
     public void refresh(GraphicsContext canvas) {
         for (int i = 0; i < shapes.size(); i ++) {
@@ -38,40 +37,60 @@ public class Painter implements DrawingEngine {
 
     @Override
     public void addShape(Shape shape) {
-        add = new AddShapeCommand(shape, shapes);
-        add.execute();
-        commands.push(add);
-        undoCommands.clear();
+        try {
+            add = new AddShapeCommand(shape, shapes);
+            add.execute();
+            commands.push(add);
+            undoCommands.clear();
+        } catch (EmptyStackException exception) {
+            throw exception;
+        }
     }
 
     @Override
     public void removeShape(Shape shape) {
-        remove = new RemoveShapeCommand(shape, shapes);
-        remove.execute();
-        commands.add(remove);
-        undoCommands.clear();
+        try {
+            remove = new RemoveShapeCommand(shape, shapes);
+            remove.execute();
+            commands.add(remove);
+            undoCommands.clear();
+        } catch (EmptyStackException exception) {
+            throw exception;
+        }
     }
 
     @Override
     public void updateShape(Shape oldShape, Shape newShape) {
-        update = new UpdateShapeCommand(oldShape, newShape, shapes);
-        update.execute();
-        commands.push(update);
-        undoCommands.clear();
+        try {
+            update = new UpdateShapeCommand(oldShape, newShape, shapes);
+            update.execute();
+            commands.push(update);
+            undoCommands.clear();
+        } catch (EmptyStackException exception) {
+            throw exception;
+        }
     }
 
     @Override
     public Shape[] getShapes() {
         Shape[] currentShapes = new Shape[shapes.size()];
-        for (int i = 0; i < shapes.size(); i ++) {
-            currentShapes[i] = shapes.get(i);
+        int i = 0;
+        for (Shape shape : shapes) {
+            currentShapes[i ++] = shape;
         }
         return currentShapes;
     }
 
     @Override
     public List<Class<? extends Shape>> getSupportedShapes() {
-        return null;
+        List<Class<? extends Shape>> supportedShapes = new LinkedList<>();
+        supportedShapes.add(Circle.class);
+        supportedShapes.add(Rectangle.class);
+        supportedShapes.add(Ellipse.class);
+        supportedShapes.add(Line.class);
+        supportedShapes.add(RoundRectangle.class);
+        supportedShapes.add(Triangle.class);
+        return supportedShapes;
     }
 
     @Override

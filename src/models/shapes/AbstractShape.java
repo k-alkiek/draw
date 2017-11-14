@@ -12,9 +12,35 @@ import java.util.Map;
  * Created by khaledabdelfattah on 10/25/17.
  */
 public abstract class AbstractShape implements Shape, Serializable {
-    protected Point2D centrePoint;
-    protected Map<String, Double> shapeProperties;
-    protected Color perimeterColor, fillColor;
+    public Point2D centrePoint;
+    public Map<String, Double> shapeProperties;
+    public Color perimeterColor, fillColor;
+
+    public void setShapeProperties(Map<String, Double> shapeProperties) {
+        this.shapeProperties = shapeProperties;
+    }
+
+    public void setPerimeterColor(Color perimeterColor) {
+        this.perimeterColor = perimeterColor;
+    }
+
+    public Point2D getCentrePoint() {
+
+        return centrePoint;
+    }
+
+    public Map<String, Double> getShapeProperties() {
+        return shapeProperties;
+    }
+
+    public Color getPerimeterColor() {
+        return perimeterColor;
+    }
+
+    public void setCentrePoint (Point2D p) {
+        centrePoint = p;
+
+    }
     public AbstractShape() {
     }
 
