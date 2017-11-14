@@ -26,8 +26,8 @@
                 <Menu mnemonicParsing="false" text="File">
                   <items>
                         <MenuItem mnemonicParsing="false" text="New Drawing" />
-                        <MenuItem mnemonicParsing="false" text="Save" />
-                        <MenuItem mnemonicParsing="false" text="Open Drawing" />
+                        <MenuItem mnemonicParsing="false" onAction="#save" text="Save" />
+                        <MenuItem mnemonicParsing="false" onAction="#load" text="Open Drawing" />
                     <MenuItem mnemonicParsing="false" text="Quit" />
                   </items>
                 </Menu>
@@ -36,6 +36,7 @@
 
                       <MenuItem mnemonicParsing="false" text="Undo" />
                         <MenuItem mnemonicParsing="false" text="Redo" />
+                        <MenuItem mnemonicParsing="false" text="Clear" />
                         <MenuItem mnemonicParsing="false" text="Delete" />
                   </items>
                 </Menu>
@@ -50,7 +51,7 @@
       </HBox>
       <BorderPane prefHeight="512.0" prefWidth="736.0" style="-fx-background-color: #616161;">
          <center>
-            <Canvas fx:id="canvas" height="424.0" width="598.0" />
+            <Canvas fx:id="canvas" height="424.0" onMousePressed="#onCanvasClick" width="598.0" />
          </center>
          <top>
             <ToolBar prefHeight="46.0" prefWidth="819.0" BorderPane.alignment="CENTER">
@@ -61,11 +62,11 @@
                   <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="63.0" text="Stroke " />
                   <JFXColorPicker fx:id="strokeColorPicker" prefHeight="26.0" prefWidth="86.0" />
                   <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="75.0" text="Thickness" />
-                  <JFXSlider fx:id="strokeSlider" max="30.0" value="10.0" />
+                  <JFXSlider fx:id="strokeSlider" max="30.0" min="0.1" value="10.0" />
                   <Canvas fx:id="strokePreviewCanvas" height="30.0" width="30.0" />
-                  <JFXBadge fx:id="undoBadge" prefHeight="34.0" prefWidth="35.0" />
-                  <JFXBadge fx:id="redoBadge" prefHeight="34.0" prefWidth="35.0" />
-                  <JFXBadge fx:id="saveBadge" prefHeight="34.0" prefWidth="41.0" />
+                  <JFXBadge fx:id="undoBadge" onMouseClicked="#undo" prefHeight="34.0" prefWidth="35.0" />
+                  <JFXBadge fx:id="redoBadge" onMouseClicked="#redo" prefHeight="34.0" prefWidth="35.0" />
+                  <JFXBadge fx:id="saveBadge" onMouseClicked="#save" prefHeight="34.0" prefWidth="41.0" />
               </items>
             </ToolBar>
          </top>

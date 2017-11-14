@@ -10,11 +10,16 @@ import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.*;
+import models.interfaces.Shape;
+import models.shapes.Polygon;
+import models.shapes.ShapesFactory;
+import models.shapes.Triangle;
 
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class SampleController implements Initializable{
 
@@ -35,24 +40,22 @@ public class SampleController implements Initializable{
     @FXML JFXBadge redoBadge;
     @FXML JFXBadge saveBadge;
 
+    Painter painter;
+    ShapesFactory factory = new ShapesFactory();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        painter = new Painter();
         initializeStrokePreview();
         initializeTools();
         initializeBadges();
 
-        canvas.setOnDragDetected(event -> {
-            Point2D startPoint = new Point2D(event.getX(), event.getY());
-            canvas.setOnMouseDragged(m->{
-                double x = m.getX();
-                double y = m.getY();
-                System.out.println("X coord: " + x);
-                System.out.println("Y coord: " + y);
-                canvas.getGraphicsContext2D().setFill(strokeColorPicker.getValue());
-                canvas.getGraphicsContext2D().fillRect(x, y, strokeSlider.getValue(), strokeSlider.getValue());
+        canvas.getGraphicsContext2D().setFill(Color.WHITE);
+        canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-            });
-        });
+        System.out.println(canvas.getBoundsInLocal().getMinX());
+        System.out.println(canvas.getBoundsInLocal().getMinY());
+
 
     }
 
@@ -78,36 +81,82 @@ public class SampleController implements Initializable{
 
     @FXML
     void redo() {
-
+        painter.redo();
+        refresh();
     }
 
     @FXML
     void save() {
+        painter.save("asd.xml");
+    }
 
+    @FXML
+    void load() {
+        painter.load("asd.xml");
+        refresh();
     }
 
     @FXML
     void undo() {
+        painter.undo();
+        refresh();
+    }
 
+    List<Point2D> clickHistory = new ArrayList<Point2D>();
+    @FXML
+    void onCanvasClick(MouseEvent click) {
+        Shape shape = factory.createShape(toolsComboBox.getValue().getText());
+
+        if (shape instanceof Triangle) {
+            if (clickHistory.size() < 2) {
+                clickHistory.add(new Point2D(click.getX(), click.getY()));
+            } else {
+                clickHistory.add(new Point2D(click.getX(), click.getY()));
+                Map<String, Double> properties = new HashMap<String, Double>();
+                properties.put("x1", clickHistory.get(0).getX());
+                properties.put("y1", clickHistory.get(0).getY());
+                properties.put("x2", clickHistory.get(1).getX());
+                properties.put("y2", clickHistory.get(1).getY());
+                properties.put("x3", clickHistory.get(2).getX());
+                properties.put("y3", clickHistory.get(2).getY());
+                properties.put("borderWidth", strokeSlider.getValue());
+
+                shape.setProperties(properties);
+                shape.setFillColor(fillColorPicker.getValue());
+                shape.setColor(strokeColorPicker.getValue());
+                painter.addShape(shape);
+                painter.refresh(canvas.getGraphicsContext2D());
+                clickHistory.clear();
+            }
+        }
+        else {
+            canvas.setOnDragDetected(event -> {
+                Point2D startPoint = new Point2D(event.getX(), event.getY());
+                canvas.setOnMouseDragged(m->{
+                    double x = m.getX();
+                    double y = m.getY();
+                    System.out.println("X coord: " + x);
+                    System.out.println("Y coord: " + y);
+                    canvas.getGraphicsContext2D().setFill(strokeColorPicker.getValue());
+                    canvas.getGraphicsContext2D().fillRect(x, y, strokeSlider.getValue(), strokeSlider.getValue());
+                    System.out.println(toolsComboBox.getValue().getText());
+
+                    shape.setPosition(startPoint);
+                    shape.setPosition(startPoint);
+                });
+            });
+        }
     }
 
     private void initializeTools() {
-        toolsComboBox.getItems().add(new Label("Circle"));
-        toolsComboBox.getItems().add(new Label("Rectangle"));
-        toolsComboBox.getItems().add(new Label("Triangle"));
+        List<Class<? extends Shape>> shapeClasses = painter.getSupportedShapes();
 
-        canvas.getGraphicsContext2D().setFill(Color.WHITE);
-        canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        for (Class<? extends Shape> shapeClass : shapeClasses) {
+            toolsComboBox.getItems().add(new Label(shapeClass.getSimpleName()));
+        }
 
-        System.out.println(canvas.getBoundsInLocal().getMinX());
-        System.out.println(canvas.getBoundsInLocal().getMinY());
-
-
-
-        Platform.runLater(() -> {
-
-        });
     }
+
 
     private void initializeStrokePreview() {
         drawStrokePreview(strokeColorPicker.getValue(), strokeSlider.getValue());
@@ -130,5 +179,16 @@ public class SampleController implements Initializable{
         gc.clearRect(0, 0, strokePreviewCanvas.getWidth(), strokePreviewCanvas.getHeight());
         gc.setFill(color);
         gc.fillOval(centerX - radius, centerY - radius, 2 * radius, 2 * radius);
+    }
+
+    private void clear() {
+        canvas.getGraphicsContext2D().setFill(Color.WHITE);
+        canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        canvas.getGraphicsContext2D().setFill(fillColorPicker.getValue());
+    }
+
+    private void refresh() {
+        clear();
+        painter.refresh(canvas.getGraphicsContext2D());
     }
 }

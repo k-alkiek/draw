@@ -34,8 +34,8 @@ public class Saver {
                 properties.add(shape.getProperties());
                 JSONObject obj = new JSONObject();
                 obj.put("shapeType", shape.getClass().getName());
-                obj.put("centerX", shape.getPosition().getX());
-                obj.put("centerY", shape.getPosition().getY());
+//                obj.put("centerX", shape.getPosition().getX());
+//                obj.put("centerY", shape.getPosition().getY());
                 obj.put("fillColorR", shape.getFillColor().getRed());
                 obj.put("fillColorG", shape.getFillColor().getGreen());
                 obj.put("fillColorB", shape.getFillColor().getBlue());
