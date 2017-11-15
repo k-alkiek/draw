@@ -115,6 +115,11 @@ public class SampleController implements Initializable{
             newShape.setFillColor(selectedShapeFillColorPicker.getValue());
             newShape.setColor(selectedShapeStrokeColorPicker.getValue());
             painter.updateShape(shape, newShape);
+
+            String shapeName = shapesMap.inverse().get(shape);
+            shapesMap.remove(shapeName);
+            shapesMap.put(shapeName, newShape);
+            
             refresh();
         }
     }
@@ -203,6 +208,7 @@ public class SampleController implements Initializable{
         addShape(shape);
     }
 
+    @FXML JFXButton u;
     private void initializeBadges() {
         FontAwesomeIconView undoIcon = new FontAwesomeIconView();
         undoIcon.setGlyphName("UNDO");
@@ -221,6 +227,8 @@ public class SampleController implements Initializable{
         StackPane s3 = new StackPane();
         s3.getChildren().add(saveIcon);
         saveBadge.getChildren().add(s3);
+
+
     }
 
     private void initializeTools() {

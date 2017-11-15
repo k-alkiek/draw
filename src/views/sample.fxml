@@ -67,7 +67,11 @@
                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="75.0" text="Thickness" />
                         <JFXSlider fx:id="strokeSlider" max="30.0" min="0.1" value="10.0" />
                         <Canvas fx:id="strokePreviewCanvas" height="30.0" width="30.0" />
-                        <JFXBadge fx:id="undoBadge" onMouseClicked="#undo" prefHeight="34.0" prefWidth="35.0" />
+                        <JFXButton>
+                           <graphic>
+                              <JFXBadge fx:id="undoBadge" onMouseClicked="#undo" prefHeight="34.0" prefWidth="35.0" />
+                           </graphic>
+                        </JFXButton>
                         <JFXBadge fx:id="redoBadge" onMouseClicked="#redo" prefHeight="34.0" prefWidth="35.0" />
                         <JFXBadge fx:id="saveBadge" onMouseClicked="#save" prefHeight="34.0" prefWidth="41.0" />
                     </items>
@@ -96,7 +100,7 @@
                               </JFXColorPicker>
                               <Label prefHeight="31.0" prefWidth="57.0" text=" Stroke" />
                               <JFXColorPicker fx:id="selectedShapeStrokeColorPicker" prefHeight="26.0" prefWidth="118.0" />
-                              <JFXButton onAction="#updateSelected" prefHeight="26.0" prefWidth="85.0" text="Update" />
+                              <JFXButton fx:id="u" onAction="#updateSelected" prefHeight="26.0" prefWidth="85.0" text="Update" />
                            </children>
                         </VBox>
                         <Region prefHeight="35.0" prefWidth="119.0" />
