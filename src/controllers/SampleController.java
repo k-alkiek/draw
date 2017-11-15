@@ -2,7 +2,6 @@ package controllers;
 
 import com.jfoenix.controls.*;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -14,14 +13,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import models.interfaces.Shape;
-import models.shapes.Polygon;
 import models.shapes.ShapesFactory;
 import models.shapes.Triangle;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
@@ -45,16 +44,18 @@ public class SampleController implements Initializable{
     @FXML JFXBadge redoBadge;
     @FXML JFXBadge saveBadge;
 
-    @FXML JFXListView shapesListView;
+    @FXML JFXListView<Label> shapesListView;
+    @FXML VBox selectedShapeLayout;
+    @FXML Label selectedShapeLabel;
 
     Painter painter;
     ShapesFactory factory = new ShapesFactory();
-    Map<String, Shape> shapesMap;
+    BiMap<String, Shape> shapesMap;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         painter = new Painter();
-        shapesMap = new HashMap<String, Shape>();
+        shapesMap = HashBiMap.create();
         initializeStrokePreview();
         initializeTools();
         initializeBadges();
@@ -65,35 +66,47 @@ public class SampleController implements Initializable{
     }
 
     @FXML
-    void deselect() {
+    void onShapeSelect() {
+        if (selectedShapes().size() == 1) {
+            selectedShapeLayout.setDisable(false);
+            Shape shape = selectedShapes().get(0);
+            selectedShapeLabel.setText(shapesMap.inverse().get(shape));
 
-        System.out.println(shapesListView.getSelectionModel().getSelectedItems());
-        shapesListView.getSelectionModel().select(-1);
+            selectedShapeFillColorPicker.setValue(shape.getFillColor());
+            selectedShapeStrokeColorPicker.setValue(shape.getColor());
+        }
+        else if (selectedShapes().size() > 1) {
+            selectedShapeLayout.setDisable(false);
+            selectedShapeLabel.setText("Shapes");
+            selectedShapeFillColorPicker.setValue(Color.BLACK);
+            selectedShapeStrokeColorPicker.setValue(Color.WHITE);
+        }
+        else {
+            deselect();
+        }
     }
-    private void initializeBadges() {
-        FontAwesomeIconView undoIcon = new FontAwesomeIconView();
-        undoIcon.setGlyphName("UNDO");
-        StackPane s1 = new StackPane();
-        s1.getChildren().add(undoIcon);
-        undoBadge.getChildren().add(s1);
 
-        FontAwesomeIconView redoIcon = new FontAwesomeIconView();
-        redoIcon.setGlyphName("REPEAT");
-        StackPane s2 = new StackPane();
-        s2.getChildren().add(redoIcon);
-        redoBadge.getChildren().add(s2);
+    @FXML
+    void deselect() {
+        selectedShapeLayout.setDisable(true);
+        shapesListView.getSelectionModel().select(-1);
+        selectedShapeLabel.setText("Selected Shape");
+    }
 
-        FontAwesomeIconView saveIcon = new FontAwesomeIconView();
-        saveIcon.setGlyphName("SAVE");
-        StackPane s3 = new StackPane();
-        s3.getChildren().add(saveIcon);
-        saveBadge.getChildren().add(s3);
+    @FXML
+    void updateSelected() {
+        for (Shape shape: selectedShapes()) {
+            shape.setFillColor(selectedShapeFillColorPicker.getValue());
+            shape.setColor(selectedShapeStrokeColorPicker.getValue());
+            refresh();
+        }
     }
 
     @FXML
     void redo() {
         painter.redo();
         refresh();
+        refreshShapeList();
     }
 
     @FXML
@@ -105,12 +118,14 @@ public class SampleController implements Initializable{
     void load() {
         painter.load("asd.xml");
         refresh();
+        refreshShapeList();
     }
 
     @FXML
     void undo() {
         painter.undo();
         refresh();
+        refreshShapeList();
     }
 
     @FXML
@@ -119,6 +134,7 @@ public class SampleController implements Initializable{
     }
 
     List<Point2D> clickHistory = new ArrayList<Point2D>();
+
     @FXML
     void onCanvasClick(MouseEvent click) {
         Shape shape = factory.createShape(toolsComboBox.getValue().getText());
@@ -150,7 +166,6 @@ public class SampleController implements Initializable{
             canvasDrag(shape, click);
         }
     }
-
     private void canvasDrag(Shape shape, MouseEvent click) {
         Map<String, Double> properties = new HashMap<String, Double>();
         Point2D originPoint = new Point2D(click.getX(), click.getY());
@@ -173,6 +188,26 @@ public class SampleController implements Initializable{
             System.out.println("Y coord: " + mouseEvent.getY());
         });
         addShape(shape);
+    }
+
+    private void initializeBadges() {
+        FontAwesomeIconView undoIcon = new FontAwesomeIconView();
+        undoIcon.setGlyphName("UNDO");
+        StackPane s1 = new StackPane();
+        s1.getChildren().add(undoIcon);
+        undoBadge.getChildren().add(s1);
+
+        FontAwesomeIconView redoIcon = new FontAwesomeIconView();
+        redoIcon.setGlyphName("REPEAT");
+        StackPane s2 = new StackPane();
+        s2.getChildren().add(redoIcon);
+        redoBadge.getChildren().add(s2);
+
+        FontAwesomeIconView saveIcon = new FontAwesomeIconView();
+        saveIcon.setGlyphName("SAVE");
+        StackPane s3 = new StackPane();
+        s3.getChildren().add(saveIcon);
+        saveBadge.getChildren().add(s3);
     }
 
     private void initializeTools() {
@@ -217,18 +252,31 @@ public class SampleController implements Initializable{
         shape.setColor(strokeColorPicker.getValue());
     }
 
+    private void addShape(Shape shape) {
+        painter.addShape(shape);
+        String shapeName = generateUniqueName(shape);
+        shapesMap.put(shapeName, shape);
+        refreshShapeList();
+    }
+
     private void refresh() {
         clear();
         painter.refresh(canvas.getGraphicsContext2D());
     }
 
-    private void addShape(Shape shape) {
-        painter.addShape(shape);
+    private void refreshShapeList() {
+        shapesListView.getItems().clear();
+        for (Shape current_shape : painter.getShapes()) {
+            shapesListView.getItems().add(0, new Label(shapesMap.inverse().get(current_shape )));
+        }
+    }
 
-        String shapeName = generateUniqueName(shape);
-        shapesMap.put(shapeName, shape);
-//        shapesComboBox.getItems().add(new CheckBox(shapeName));
-        shapesListView.getItems().add(0, new Label(shapeName));
+    private List<Shape> selectedShapes() {
+        List<Shape> list = new ArrayList<Shape>();
+        for (Label label : shapesListView.getSelectionModel().getSelectedItems()) {
+            list.add(shapesMap.get(label.getText()));
+        }
+        return list;
     }
 
     private String generateUniqueName(Shape shape) {
