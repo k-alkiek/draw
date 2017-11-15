@@ -18,11 +18,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import models.interfaces.Shape;
+import models.shapes.Line;
 import models.shapes.ShapesFactory;
 import models.shapes.Triangle;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
@@ -235,28 +237,51 @@ public class SampleController implements Initializable{
         }
         else {
             clickHistory.clear();
-            canvasDrag(shape, click);
+            Point2D originPoint = new Point2D(click.getX(), click.getY());
+            canvasDrag(shape, originPoint);
         }
     }
 
-    private void canvasDrag(Shape shape, MouseEvent click) {
+    private void canvasDrag(Shape shape, Point2D originPoint) {
         Map<String, Double> properties = new HashMap<String, Double>();
-        Point2D originPoint = new Point2D(click.getX(), click.getY());
 
-        properties.put("x1", click.getX());
-        properties.put("y1", click.getY());
         properties.put("borderWidth", strokeSlider.getValue());
 
         setShapeColors(shape);
 
         canvas.setOnMouseDragged(mouseEvent->{
-            properties.put("x2", mouseEvent.getX());
-            properties.put("y2", mouseEvent.getY());
+            if ( shape instanceof Line || (mouseEvent.getX() >= originPoint.getX() && mouseEvent.getY() >= originPoint.getY())) {
+                properties.put("x1", originPoint.getX());
+                properties.put("y1", originPoint.getY());
+                properties.put("x2", mouseEvent.getX());
+                properties.put("y2", mouseEvent.getY());
+            }
+            else if (mouseEvent.getX() >= originPoint.getX() && mouseEvent.getY() <= originPoint.getY()) {
+                properties.put("x1", originPoint.getX());
+                properties.put("y1", mouseEvent.getY());
+                properties.put("x2", mouseEvent.getX());
+                properties.put("y2", originPoint.getY());
+            }
+            else if (mouseEvent.getX() <= originPoint.getX() && mouseEvent.getY() <= originPoint.getY()) {
+                properties.put("x1", mouseEvent.getX());
+                properties.put("y1", mouseEvent.getY());
+                properties.put("x2", originPoint.getX());
+                properties.put("y2", originPoint.getY());
+            }
+            else if (mouseEvent.getX() <= originPoint.getX() && mouseEvent.getY() >= originPoint.getY()) {
+                properties.put("x1", mouseEvent.getX());
+                properties.put("y1", originPoint.getY());
+                properties.put("x2", originPoint.getX());
+                properties.put("y2", mouseEvent.getY());
+            }
+
             shape.setProperties(properties);
             painter.addShapePreview(shape);
             refresh();
             painter.removeShapePreview(shape);
             System.out.println(shape);
+            System.out.println("X coord: " + originPoint.getX());
+            System.out.println("Y coord: " + originPoint.getY());
             System.out.println("X coord: " + mouseEvent.getX());
             System.out.println("Y coord: " + mouseEvent.getY());
         });
