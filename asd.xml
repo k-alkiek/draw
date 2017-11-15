@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="1.8.0_131" class="java.beans.XMLDecoder">
+<java version="1.8.0_121" class="java.beans.XMLDecoder">
  <object class="java.util.ArrayList">
   <void method="add">
    <object class="java.util.HashMap">
@@ -9,59 +9,27 @@
     </void>
     <void method="put">
      <string>y1</string>
-     <double>153.0</double>
+     <double>98.0</double>
     </void>
     <void method="put">
      <string>x1</string>
-     <double>268.0</double>
+     <double>197.0</double>
     </void>
     <void method="put">
      <string>y2</string>
-     <double>240.0</double>
-    </void>
-    <void method="put">
-     <string>x2</string>
-     <double>348.0</double>
-    </void>
-    <void method="put">
-     <string>y3</string>
-     <double>260.0</double>
-    </void>
-    <void method="put">
-     <string>x3</string>
      <double>246.0</double>
     </void>
-   </object>
-  </void>
-  <void method="add">
-   <object class="java.util.HashMap">
-    <void method="put">
-     <string>borderWidth</string>
-     <double>10.0</double>
-    </void>
-    <void method="put">
-     <string>y1</string>
-     <double>132.0</double>
-    </void>
-    <void method="put">
-     <string>x1</string>
-     <double>89.0</double>
-    </void>
-    <void method="put">
-     <string>y2</string>
-     <double>182.0</double>
-    </void>
     <void method="put">
      <string>x2</string>
-     <double>249.0</double>
+     <double>486.0</double>
     </void>
     <void method="put">
      <string>y3</string>
-     <double>206.0</double>
+     <double>349.0</double>
     </void>
     <void method="put">
      <string>x3</string>
-     <double>207.0</double>
+     <double>147.0</double>
     </void>
    </object>
   </void>
@@ -69,114 +37,41 @@
    <object class="java.util.HashMap">
     <void method="put">
      <string>borderWidth</string>
-     <double>10.0</double>
+     <double>30.0</double>
     </void>
     <void method="put">
      <string>y1</string>
-     <double>76.0</double>
+     <double>41.0</double>
     </void>
     <void method="put">
      <string>x1</string>
-     <double>141.0</double>
+     <double>314.0</double>
     </void>
     <void method="put">
      <string>y2</string>
-     <double>94.0</double>
+     <double>95.0</double>
     </void>
     <void method="put">
      <string>x2</string>
-     <double>251.0</double>
+     <double>506.0</double>
     </void>
     <void method="put">
      <string>y3</string>
-     <double>173.0</double>
+     <double>352.0</double>
     </void>
     <void method="put">
      <string>x3</string>
-     <double>154.0</double>
-    </void>
-   </object>
-  </void>
-  <void method="add">
-   <object class="java.util.HashMap">
-    <void method="put">
-     <string>borderWidth</string>
-     <double>10.0</double>
-    </void>
-    <void method="put">
-     <string>y1</string>
-     <double>155.0</double>
-    </void>
-    <void method="put">
-     <string>x1</string>
-     <double>386.0</double>
-    </void>
-    <void method="put">
-     <string>y2</string>
-     <double>115.0</double>
-    </void>
-    <void method="put">
-     <string>x2</string>
-     <double>441.0</double>
-    </void>
-    <void method="put">
-     <string>y3</string>
-     <double>66.0</double>
-    </void>
-    <void method="put">
-     <string>x3</string>
-     <double>298.0</double>
-    </void>
-   </object>
-  </void>
-  <void method="add">
-   <object class="java.util.HashMap">
-    <void method="put">
-     <string>borderWidth</string>
-     <double>3.0072580645161295</double>
-    </void>
-    <void method="put">
-     <string>y1</string>
-     <double>218.0</double>
-    </void>
-    <void method="put">
-     <string>x1</string>
-     <double>102.0</double>
-    </void>
-    <void method="put">
-     <string>y2</string>
-     <double>242.0</double>
-    </void>
-    <void method="put">
-     <string>x2</string>
-     <double>211.0</double>
-    </void>
-    <void method="put">
-     <string>y3</string>
-     <double>334.0</double>
-    </void>
-    <void method="put">
-     <string>x3</string>
-     <double>150.0</double>
+     <double>143.0</double>
     </void>
    </object>
   </void>
  </object>
  <object class="java.util.ArrayList">
   <void method="add">
-   <string>&lt;perColorG&gt;0.4588235318660736&lt;/perColorG&gt;&lt;shapeType&gt;models.shapes.Triangle&lt;/shapeType&gt;&lt;fillColorOpacity&gt;1.0&lt;/fillColorOpacity&gt;&lt;fillColorR&gt;1.0&lt;/fillColorR&gt;&lt;fillColorB&gt;1.0&lt;/fillColorB&gt;&lt;perColorOpacity&gt;1.0&lt;/perColorOpacity&gt;&lt;perColorR&gt;0.5843137502670288&lt;/perColorR&gt;&lt;perColorB&gt;0.8039215803146362&lt;/perColorB&gt;&lt;fillColorG&gt;1.0&lt;/fillColorG&gt;</string>
+   <string>&lt;perColorG&gt;0.12941177189350128&lt;/perColorG&gt;&lt;shapeType&gt;models.shapes.Triangle&lt;/shapeType&gt;&lt;fillColorOpacity&gt;1.0&lt;/fillColorOpacity&gt;&lt;fillColorR&gt;1.0&lt;/fillColorR&gt;&lt;fillColorB&gt;1.0&lt;/fillColorB&gt;&lt;perColorOpacity&gt;1.0&lt;/perColorOpacity&gt;&lt;perColorR&gt;0.12941177189350128&lt;/perColorR&gt;&lt;perColorB&gt;0.12941177189350128&lt;/perColorB&gt;&lt;fillColorG&gt;1.0&lt;/fillColorG&gt;</string>
   </void>
   <void method="add">
-   <string>&lt;perColorG&gt;1.0&lt;/perColorG&gt;&lt;shapeType&gt;models.shapes.Triangle&lt;/shapeType&gt;&lt;fillColorOpacity&gt;1.0&lt;/fillColorOpacity&gt;&lt;fillColorR&gt;1.0&lt;/fillColorR&gt;&lt;fillColorB&gt;1.0&lt;/fillColorB&gt;&lt;perColorOpacity&gt;1.0&lt;/perColorOpacity&gt;&lt;perColorR&gt;1.0&lt;/perColorR&gt;&lt;perColorB&gt;1.0&lt;/perColorB&gt;&lt;fillColorG&gt;1.0&lt;/fillColorG&gt;</string>
-  </void>
-  <void method="add">
-   <string>&lt;perColorG&gt;0.1568627506494522&lt;/perColorG&gt;&lt;shapeType&gt;models.shapes.Triangle&lt;/shapeType&gt;&lt;fillColorOpacity&gt;1.0&lt;/fillColorOpacity&gt;&lt;fillColorR&gt;1.0&lt;/fillColorR&gt;&lt;fillColorB&gt;1.0&lt;/fillColorB&gt;&lt;perColorOpacity&gt;1.0&lt;/perColorOpacity&gt;&lt;perColorR&gt;0.7764706015586853&lt;/perColorR&gt;&lt;perColorB&gt;0.1568627506494522&lt;/perColorB&gt;&lt;fillColorG&gt;1.0&lt;/fillColorG&gt;</string>
-  </void>
-  <void method="add">
-   <string>&lt;perColorG&gt;0.1568627506494522&lt;/perColorG&gt;&lt;shapeType&gt;models.shapes.Triangle&lt;/shapeType&gt;&lt;fillColorOpacity&gt;1.0&lt;/fillColorOpacity&gt;&lt;fillColorR&gt;1.0&lt;/fillColorR&gt;&lt;fillColorB&gt;1.0&lt;/fillColorB&gt;&lt;perColorOpacity&gt;1.0&lt;/perColorOpacity&gt;&lt;perColorR&gt;0.7764706015586853&lt;/perColorR&gt;&lt;perColorB&gt;0.1568627506494522&lt;/perColorB&gt;&lt;fillColorG&gt;1.0&lt;/fillColorG&gt;</string>
-  </void>
-  <void method="add">
-   <string>&lt;perColorG&gt;0.1568627506494522&lt;/perColorG&gt;&lt;shapeType&gt;models.shapes.Triangle&lt;/shapeType&gt;&lt;fillColorOpacity&gt;1.0&lt;/fillColorOpacity&gt;&lt;fillColorR&gt;0.3921568691730499&lt;/fillColorR&gt;&lt;fillColorB&gt;0.9647058844566345&lt;/fillColorB&gt;&lt;perColorOpacity&gt;1.0&lt;/perColorOpacity&gt;&lt;perColorR&gt;0.7764706015586853&lt;/perColorR&gt;&lt;perColorB&gt;0.1568627506494522&lt;/perColorB&gt;&lt;fillColorG&gt;0.7098039388656616&lt;/fillColorG&gt;</string>
+   <string>&lt;perColorG&gt;0.12941177189350128&lt;/perColorG&gt;&lt;shapeType&gt;models.shapes.Triangle&lt;/shapeType&gt;&lt;fillColorOpacity&gt;1.0&lt;/fillColorOpacity&gt;&lt;fillColorR&gt;1.0&lt;/fillColorR&gt;&lt;fillColorB&gt;1.0&lt;/fillColorB&gt;&lt;perColorOpacity&gt;1.0&lt;/perColorOpacity&gt;&lt;perColorR&gt;0.12941177189350128&lt;/perColorR&gt;&lt;perColorB&gt;0.12941177189350128&lt;/perColorB&gt;&lt;fillColorG&gt;1.0&lt;/fillColorG&gt;</string>
   </void>
  </object>
 </java>
