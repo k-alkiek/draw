@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <java version="1.8.0_131" class="java.beans.XMLDecoder">
+<<<<<<< HEAD
     <object class="java.util.ArrayList">
         <void method="add">
             <object class="java.util.HashMap">
@@ -40,3 +41,37 @@
         </void>
     </object>
 </java>
+=======
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object class="java.util.HashMap">
+    <void method="put">
+     <string>borderWidth</string>
+     <double>10.0</double>
+    </void>
+    <void method="put">
+     <string>y1</string>
+     <double>80.0</double>
+    </void>
+    <void method="put">
+     <string>x1</string>
+     <double>124.0</double>
+    </void>
+    <void method="put">
+     <string>y2</string>
+     <double>326.0</double>
+    </void>
+    <void method="put">
+     <string>x2</string>
+     <double>441.0</double>
+    </void>
+   </object>
+  </void>
+ </object>
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <string>&lt;perColorG&gt;0.5254902243614197&lt;/perColorG&gt;&lt;shapeType&gt;models.shapes.Ellipse&lt;/shapeType&gt;&lt;fillColorOpacity&gt;1.0&lt;/fillColorOpacity&gt;&lt;fillColorR&gt;0.4156862795352936&lt;/fillColorR&gt;&lt;fillColorB&gt;0.6039215922355652&lt;/fillColorB&gt;&lt;perColorOpacity&gt;1.0&lt;/perColorOpacity&gt;&lt;perColorR&gt;0.4745098054409027&lt;/perColorR&gt;&lt;perColorB&gt;0.7960784435272217&lt;/perColorB&gt;&lt;fillColorG&gt;0.10588235408067703&lt;/fillColorG&gt;</string>
+  </void>
+ </object>
+</java>
+>>>>>>> 0b542467cba8bd6f909c619d8dc1fd64b5208a30

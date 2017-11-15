@@ -25,15 +25,15 @@ public class RoundRectangle extends AbstractShape implements Serializable {
                 shapeProperties.get("y1"),
                 width,
                 height,
-                0.5,
-                0.5);
+                1,
+                1);
         canvas.setStroke(perimeterColor);
         canvas.strokeRoundRect(shapeProperties.get("x1"),
                 shapeProperties.get("y1"),
                 width,
                 height,
-                0.5,
-                0.5);
+                1,
+                1);
     }
 
     @Override
