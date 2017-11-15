@@ -47,6 +47,15 @@ public class Painter implements DrawingEngine {
         }
     }
 
+    public void addShapePreview(Shape shape) {
+        try {
+            add = new AddShapeCommand(shape, shapes);
+            add.execute();
+        } catch (EmptyStackException exception) {
+            throw exception;
+        }
+    }
+
     @Override
     public void removeShape(Shape shape) {
         try {
@@ -54,6 +63,15 @@ public class Painter implements DrawingEngine {
             remove.execute();
             commands.add(remove);
             undoCommands.clear();
+        } catch (EmptyStackException exception) {
+            throw exception;
+        }
+    }
+
+    public void removeShapePreview(Shape shape) {
+        try {
+            remove = new RemoveShapeCommand(shape, shapes);
+            remove.execute();
         } catch (EmptyStackException exception) {
             throw exception;
         }

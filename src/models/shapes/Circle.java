@@ -17,6 +17,7 @@ public class Circle extends AbstractShape implements Serializable {
 
     @Override
     public void draw(GraphicsContext canvas) {
+        setAtrributes();
         canvas.setLineWidth(shapeProperties.get("borderWidth"));
         canvas.setFill(fillColor);
         canvas.fillOval(shapeProperties.get("x1"),

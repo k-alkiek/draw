@@ -10,5 +10,24 @@
     <orderEntry type="library" name="java-json" level="project" />
     <orderEntry type="library" name="jfoenix" level="project" />
     <orderEntry type="library" name="fontawesomefx-8.9" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/google-collections-1.0-rc2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/google-collect-snapshot-20071022.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="google-collections-1.0" level="project" />
   </component>
 </module>
