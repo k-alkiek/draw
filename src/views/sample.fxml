@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXBadge?>
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXColorPicker?>
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXSlider?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
@@ -36,7 +38,11 @@
 
                       <MenuItem mnemonicParsing="false" text="Undo" />
                         <MenuItem mnemonicParsing="false" text="Redo" />
-                        <MenuItem mnemonicParsing="false" text="Clear" />
+                        <Menu mnemonicParsing="false" text="Draw Shape">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Action 1" />
+                          </items>
+                        </Menu>
                         <MenuItem mnemonicParsing="false" text="Delete" />
                   </items>
                 </Menu>
@@ -93,6 +99,8 @@
                         <Insets bottom="5.0" left="5.0" top="5.0" />
                      </VBox.margin>
                   </JFXComboBox>
+                  <JFXButton onAction="#deselect" prefHeight="26.0" prefWidth="124.0" text="Deselect" />
+                  <JFXListView fx:id="shapesListView" prefHeight="217.0" prefWidth="140.0" />
                </children>
             </VBox>
          </left>

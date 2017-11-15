@@ -9,17 +9,22 @@ import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
 import models.interfaces.Shape;
 import models.shapes.Polygon;
 import models.shapes.ShapesFactory;
 import models.shapes.Triangle;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 
 public class SampleController implements Initializable{
 
@@ -34,31 +39,37 @@ public class SampleController implements Initializable{
     @FXML Group selectedShapeGroup;
     @FXML JFXColorPicker selectedShapeFillColorPicker;
     @FXML JFXColorPicker selectedShapeStrokeColorPicker;
-    @FXML JFXComboBox<?> shapesComboBox;
+    @FXML JFXComboBox<CheckBox> shapesComboBox;
 
     @FXML JFXBadge undoBadge;
     @FXML JFXBadge redoBadge;
     @FXML JFXBadge saveBadge;
 
+    @FXML JFXListView shapesListView;
+
     Painter painter;
     ShapesFactory factory = new ShapesFactory();
+    Map<String, Shape> shapesMap;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         painter = new Painter();
+        shapesMap = new HashMap<String, Shape>();
         initializeStrokePreview();
         initializeTools();
         initializeBadges();
 
-        canvas.getGraphicsContext2D().setFill(Color.WHITE);
-        canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        shapesListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        System.out.println(canvas.getBoundsInLocal().getMinX());
-        System.out.println(canvas.getBoundsInLocal().getMinY());
-
-
+        clear();
     }
 
+    @FXML
+    void deselect() {
+
+        System.out.println(shapesListView.getSelectionModel().getSelectedItems());
+        shapesListView.getSelectionModel().select(-1);
+    }
     private void initializeBadges() {
         FontAwesomeIconView undoIcon = new FontAwesomeIconView();
         undoIcon.setGlyphName("UNDO");
@@ -102,6 +113,11 @@ public class SampleController implements Initializable{
         refresh();
     }
 
+    @FXML
+    void comboBoxSelected() {
+        clickHistory.clear();
+    }
+
     List<Point2D> clickHistory = new ArrayList<Point2D>();
     @FXML
     void onCanvasClick(MouseEvent click) {
@@ -124,28 +140,39 @@ public class SampleController implements Initializable{
                 shape.setProperties(properties);
                 shape.setFillColor(fillColorPicker.getValue());
                 shape.setColor(strokeColorPicker.getValue());
-                painter.addShape(shape);
+                addShape(shape);
                 painter.refresh(canvas.getGraphicsContext2D());
                 clickHistory.clear();
             }
         }
         else {
-            canvas.setOnDragDetected(event -> {
-                Point2D startPoint = new Point2D(event.getX(), event.getY());
-                canvas.setOnMouseDragged(m->{
-                    double x = m.getX();
-                    double y = m.getY();
-                    System.out.println("X coord: " + x);
-                    System.out.println("Y coord: " + y);
-                    canvas.getGraphicsContext2D().setFill(strokeColorPicker.getValue());
-                    canvas.getGraphicsContext2D().fillRect(x, y, strokeSlider.getValue(), strokeSlider.getValue());
-                    System.out.println(toolsComboBox.getValue().getText());
-
-                    shape.setPosition(startPoint);
-                    shape.setPosition(startPoint);
-                });
-            });
+            clickHistory.clear();
+            canvasDrag(shape, click);
         }
+    }
+
+    private void canvasDrag(Shape shape, MouseEvent click) {
+        Map<String, Double> properties = new HashMap<String, Double>();
+        Point2D originPoint = new Point2D(click.getX(), click.getY());
+
+        properties.put("x1", click.getX());
+        properties.put("y1", click.getY());
+        properties.put("borderWidth", strokeSlider.getValue());
+
+        setShapeColors(shape);
+
+        canvas.setOnMouseDragged(mouseEvent->{
+            properties.put("x2", mouseEvent.getX());
+            properties.put("y2", mouseEvent.getY());
+            shape.setProperties(properties);
+            painter.addShapePreview(shape);
+            refresh();
+            painter.removeShapePreview(shape);
+            System.out.println(shape);
+            System.out.println("X coord: " + mouseEvent.getX());
+            System.out.println("Y coord: " + mouseEvent.getY());
+        });
+        addShape(shape);
     }
 
     private void initializeTools() {
@@ -154,9 +181,7 @@ public class SampleController implements Initializable{
         for (Class<? extends Shape> shapeClass : shapeClasses) {
             toolsComboBox.getItems().add(new Label(shapeClass.getSimpleName()));
         }
-
     }
-
 
     private void initializeStrokePreview() {
         drawStrokePreview(strokeColorPicker.getValue(), strokeSlider.getValue());
@@ -187,8 +212,34 @@ public class SampleController implements Initializable{
         canvas.getGraphicsContext2D().setFill(fillColorPicker.getValue());
     }
 
+    private void setShapeColors(Shape shape) {
+        shape.setFillColor(fillColorPicker.getValue());
+        shape.setColor(strokeColorPicker.getValue());
+    }
+
     private void refresh() {
         clear();
         painter.refresh(canvas.getGraphicsContext2D());
+    }
+
+    private void addShape(Shape shape) {
+        painter.addShape(shape);
+
+        String shapeName = generateUniqueName(shape);
+        shapesMap.put(shapeName, shape);
+//        shapesComboBox.getItems().add(new CheckBox(shapeName));
+        shapesListView.getItems().add(0, new Label(shapeName));
+    }
+
+    private String generateUniqueName(Shape shape) {
+        String name = shape.getClass().getSimpleName();
+        String currentName = new String(name);
+
+        int count = 1;
+        while ( shapesMap.keySet().contains(currentName)) {
+            currentName = name + " " + count;
+            count ++;
+        }
+        return currentName;
     }
 }
