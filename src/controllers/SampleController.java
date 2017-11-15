@@ -2,6 +2,7 @@ package controllers;
 
 import com.jfoenix.controls.*;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -13,6 +14,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.util.Pair;
 import models.interfaces.Shape;
 import models.shapes.ShapesFactory;
 import models.shapes.Triangle;
@@ -24,7 +28,7 @@ import java.util.*;
 import java.util.List;
 
 public class SampleController implements Initializable{
-
+    private String filePath;
     private Painter painter;
     private ShapesFactory factory = new ShapesFactory();
     private BiMap<String, Shape> shapesMap;
@@ -40,8 +44,9 @@ public class SampleController implements Initializable{
     @FXML private Canvas strokePreviewCanvas;
     @FXML private JFXBadge undoBadge;
     @FXML private JFXBadge redoBadge;
-
     @FXML private JFXBadge saveBadge;
+    @FXML private JFXBadge deleteBadge;
+
     @FXML private VBox selectedShapeLayout;
     @FXML private Label selectedShapeLabel;
     @FXML private JFXColorPicker selectedShapeFillColorPicker;
@@ -53,6 +58,7 @@ public class SampleController implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         painter = new Painter();
         shapesMap = HashBiMap.create();
+        filePath = null;
         initializeStrokePreview();
         initializeTools();
         initializeBadges();
@@ -103,7 +109,7 @@ public class SampleController implements Initializable{
 
 
     @FXML
-    void updateSelected() {
+    void updateSelectedShapes() {
         for (Shape shape: selectedShapes()) {
             Shape newShape;
             try {
@@ -119,9 +125,19 @@ public class SampleController implements Initializable{
             String shapeName = shapesMap.inverse().get(shape);
             shapesMap.remove(shapeName);
             shapesMap.put(shapeName, newShape);
-            
+
             refresh();
         }
+    }
+
+    @FXML
+    void deleteSelectedShapes() {
+        for (Shape shape: selectedShapes()) {
+            painter.removeShape(shape);
+        }
+        deselect();
+        refresh();
+        refreshShapeList();
     }
 
     @FXML
@@ -133,14 +149,53 @@ public class SampleController implements Initializable{
 
     @FXML
     void save() {
-        painter.save("asd.xml");
+        if (filePath == null) {
+            saveAs();
+        }
+        else {
+            painter.save(filePath);
+        }
+    }
+
+    @FXML
+    void saveAs() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Drawing XML");
+
+        try {
+            StringBuilder path = new StringBuilder(fileChooser.showSaveDialog(new Stage()).getPath());
+            if (!path.substring(path.length() - 4).equals(".xml")) {
+                path.append(".xml");
+            }
+            filePath = path.toString();
+            painter.save(filePath);
+        } catch (Exception e) {
+
+        }
     }
 
     @FXML
     void load() {
-        painter.load("asd.xml");
-        refresh();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Drawing XML");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
+        try {
+            filePath = fileChooser.showOpenDialog(new Stage()).getPath();
+            painter.load(filePath);
+        } catch (Exception e) {
+
+        }
+        for (Shape shape : painter.getShapes()) {
+            String shapeName = generateUniqueName(shape);
+            shapesMap.put(shapeName, shape);
+        }
         refreshShapeList();
+        refresh();
+    }
+
+    @FXML
+    void exit() {
+        Platform.exit();
     }
 
     @FXML
@@ -208,27 +263,20 @@ public class SampleController implements Initializable{
         addShape(shape);
     }
 
-    @FXML JFXButton u;
     private void initializeBadges() {
-        FontAwesomeIconView undoIcon = new FontAwesomeIconView();
-        undoIcon.setGlyphName("UNDO");
-        StackPane s1 = new StackPane();
-        s1.getChildren().add(undoIcon);
-        undoBadge.getChildren().add(s1);
+        Map<JFXBadge, String> map = new HashMap<JFXBadge, String>();
+        map.put(undoBadge, "UNDO");
+        map.put(redoBadge, "REPEAT");
+        map.put(saveBadge, "SAVE");
+        map.put(deleteBadge, "TRASH");
 
-        FontAwesomeIconView redoIcon = new FontAwesomeIconView();
-        redoIcon.setGlyphName("REPEAT");
-        StackPane s2 = new StackPane();
-        s2.getChildren().add(redoIcon);
-        redoBadge.getChildren().add(s2);
-
-        FontAwesomeIconView saveIcon = new FontAwesomeIconView();
-        saveIcon.setGlyphName("SAVE");
-        StackPane s3 = new StackPane();
-        s3.getChildren().add(saveIcon);
-        saveBadge.getChildren().add(s3);
-
-
+        for (JFXBadge badge : map.keySet()) {
+            FontAwesomeIconView icon = new FontAwesomeIconView();
+            icon.setGlyphName(map.get(badge));
+            StackPane stackPane = new StackPane();
+            stackPane.getChildren().add(icon);
+            badge.getChildren().add(stackPane);
+        }
     }
 
     private void initializeTools() {
@@ -292,8 +340,8 @@ public class SampleController implements Initializable{
 
     private void refreshShapeList() {
         shapesListView.getItems().clear();
-        for (Shape current_shape : painter.getShapes()) {
-            shapesListView.getItems().add(0, new Label(shapesMap.inverse().get(current_shape )));
+        for (Shape shape : painter.getShapes()) {
+            shapesListView.getItems().add(0, new Label(shapesMap.inverse().get(shape)));
         }
     }
 
