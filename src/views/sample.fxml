@@ -59,7 +59,7 @@
                <top>
                   <ToolBar prefHeight="46.0" prefWidth="819.0" BorderPane.alignment="CENTER">
                     <items>
-                        <JFXComboBox fx:id="toolsComboBox" prefHeight="29.0" prefWidth="89.0" />
+                        <JFXComboBox fx:id="toolsComboBox" onAction="#onToolSelected" prefHeight="29.0" prefWidth="89.0" />
                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="37.0" text="Fill " />
                         <JFXColorPicker fx:id="fillColorPicker" prefHeight="26.0" prefWidth="84.0" />
                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="63.0" text="Stroke " />

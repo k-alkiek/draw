@@ -5,10 +5,8 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
-import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.input.MouseEvent;
@@ -27,30 +25,29 @@ import java.util.List;
 
 public class SampleController implements Initializable{
 
-    @FXML Canvas canvas;
+    private Painter painter;
+    private ShapesFactory factory = new ShapesFactory();
+    private BiMap<String, Shape> shapesMap;
+    List<Point2D> clickHistory = new ArrayList<Point2D>();
 
-    @FXML JFXComboBox<Label> toolsComboBox;
-    @FXML JFXColorPicker fillColorPicker;
-    @FXML JFXColorPicker strokeColorPicker;
-    @FXML JFXSlider strokeSlider;
-    @FXML Canvas strokePreviewCanvas;
+    @FXML private Canvas canvas;
 
-    @FXML Group selectedShapeGroup;
-    @FXML JFXColorPicker selectedShapeFillColorPicker;
-    @FXML JFXColorPicker selectedShapeStrokeColorPicker;
-    @FXML JFXComboBox<CheckBox> shapesComboBox;
+    @FXML private JFXComboBox<Label> toolsComboBox;
+    @FXML private JFXColorPicker fillColorPicker;
+    @FXML private JFXColorPicker strokeColorPicker;
+    @FXML private JFXSlider strokeSlider;
 
-    @FXML JFXBadge undoBadge;
-    @FXML JFXBadge redoBadge;
-    @FXML JFXBadge saveBadge;
+    @FXML private Canvas strokePreviewCanvas;
+    @FXML private JFXBadge undoBadge;
+    @FXML private JFXBadge redoBadge;
 
-    @FXML JFXListView<Label> shapesListView;
-    @FXML VBox selectedShapeLayout;
-    @FXML Label selectedShapeLabel;
+    @FXML private JFXBadge saveBadge;
+    @FXML private VBox selectedShapeLayout;
+    @FXML private Label selectedShapeLabel;
+    @FXML private JFXColorPicker selectedShapeFillColorPicker;
+    @FXML private JFXColorPicker selectedShapeStrokeColorPicker;
 
-    Painter painter;
-    ShapesFactory factory = new ShapesFactory();
-    BiMap<String, Shape> shapesMap;
+    @FXML private JFXListView<Label> shapesListView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -71,15 +68,16 @@ public class SampleController implements Initializable{
             selectedShapeLayout.setDisable(false);
             Shape shape = selectedShapes().get(0);
             selectedShapeLabel.setText(shapesMap.inverse().get(shape));
-
             selectedShapeFillColorPicker.setValue(shape.getFillColor());
             selectedShapeStrokeColorPicker.setValue(shape.getColor());
+            drawBoundingBox();
         }
         else if (selectedShapes().size() > 1) {
             selectedShapeLayout.setDisable(false);
             selectedShapeLabel.setText("Shapes");
             selectedShapeFillColorPicker.setValue(Color.BLACK);
             selectedShapeStrokeColorPicker.setValue(Color.WHITE);
+            drawBoundingBox();
         }
         else {
             deselect();
@@ -91,13 +89,32 @@ public class SampleController implements Initializable{
         selectedShapeLayout.setDisable(true);
         shapesListView.getSelectionModel().select(-1);
         selectedShapeLabel.setText("Selected Shape");
+        removeBoundingBox();
     }
+
+    private void drawBoundingBox() {
+        double minX, minY;
+        for (Shape shape : selectedShapes()) {
+        }
+    }
+
+    private void removeBoundingBox() {
+    }
+
 
     @FXML
     void updateSelected() {
         for (Shape shape: selectedShapes()) {
-            shape.setFillColor(selectedShapeFillColorPicker.getValue());
-            shape.setColor(selectedShapeStrokeColorPicker.getValue());
+            Shape newShape;
+            try {
+                newShape = shape.getClass().newInstance();
+            } catch (Exception e) {
+                return;
+            }
+            newShape.setProperties(shape.getProperties());
+            newShape.setFillColor(selectedShapeFillColorPicker.getValue());
+            newShape.setColor(selectedShapeStrokeColorPicker.getValue());
+            painter.updateShape(shape, newShape);
             refresh();
         }
     }
@@ -128,12 +145,7 @@ public class SampleController implements Initializable{
         refreshShapeList();
     }
 
-    @FXML
-    void comboBoxSelected() {
-        clickHistory.clear();
-    }
 
-    List<Point2D> clickHistory = new ArrayList<Point2D>();
 
     @FXML
     void onCanvasClick(MouseEvent click) {
@@ -166,6 +178,7 @@ public class SampleController implements Initializable{
             canvasDrag(shape, click);
         }
     }
+
     private void canvasDrag(Shape shape, MouseEvent click) {
         Map<String, Double> properties = new HashMap<String, Double>();
         Point2D originPoint = new Point2D(click.getX(), click.getY());
@@ -216,6 +229,11 @@ public class SampleController implements Initializable{
         for (Class<? extends Shape> shapeClass : shapeClasses) {
             toolsComboBox.getItems().add(new Label(shapeClass.getSimpleName()));
         }
+    }
+
+    @FXML
+    void onToolSelected() {
+        clickHistory.clear();
     }
 
     private void initializeStrokePreview() {

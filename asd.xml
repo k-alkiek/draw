@@ -5,38 +5,30 @@
    <object class="java.util.HashMap">
     <void method="put">
      <string>borderWidth</string>
-     <double>19.16290322580645</double>
+     <double>10.0</double>
     </void>
     <void method="put">
      <string>y1</string>
-     <double>113.0</double>
+     <double>80.0</double>
     </void>
     <void method="put">
      <string>x1</string>
-     <double>103.0</double>
+     <double>124.0</double>
     </void>
     <void method="put">
      <string>y2</string>
-     <double>104.0</double>
+     <double>326.0</double>
     </void>
     <void method="put">
      <string>x2</string>
-     <double>323.0</double>
-    </void>
-    <void method="put">
-     <string>y3</string>
-     <double>259.0</double>
-    </void>
-    <void method="put">
-     <string>x3</string>
-     <double>224.0</double>
+     <double>441.0</double>
     </void>
    </object>
   </void>
  </object>
  <object class="java.util.ArrayList">
   <void method="add">
-   <string>&lt;perColorG&gt;0.054901961237192154&lt;/perColorG&gt;&lt;shapeType&gt;models.shapes.Triangle&lt;/shapeType&gt;&lt;fillColorOpacity&gt;1.0&lt;/fillColorOpacity&gt;&lt;fillColorR&gt;1.0&lt;/fillColorR&gt;&lt;fillColorB&gt;1.0&lt;/fillColorB&gt;&lt;perColorOpacity&gt;1.0&lt;/perColorOpacity&gt;&lt;perColorR&gt;0.5333333611488342&lt;/perColorR&gt;&lt;perColorB&gt;0.30980393290519714&lt;/perColorB&gt;&lt;fillColorG&gt;1.0&lt;/fillColorG&gt;</string>
+   <string>&lt;perColorG&gt;0.5254902243614197&lt;/perColorG&gt;&lt;shapeType&gt;models.shapes.Ellipse&lt;/shapeType&gt;&lt;fillColorOpacity&gt;1.0&lt;/fillColorOpacity&gt;&lt;fillColorR&gt;0.4156862795352936&lt;/fillColorR&gt;&lt;fillColorB&gt;0.6039215922355652&lt;/fillColorB&gt;&lt;perColorOpacity&gt;1.0&lt;/perColorOpacity&gt;&lt;perColorR&gt;0.4745098054409027&lt;/perColorR&gt;&lt;perColorB&gt;0.7960784435272217&lt;/perColorB&gt;&lt;fillColorG&gt;0.10588235408067703&lt;/fillColorG&gt;</string>
   </void>
  </object>
 </java>
