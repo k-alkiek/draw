@@ -15,19 +15,23 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="584.0" prefWidth="819.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SampleController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="584.0" prefWidth="887.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SampleController">
    <children>
       <MenuBar prefHeight="29.0" prefWidth="942.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem mnemonicParsing="false" text="New Drawing" />
-                  <MenuItem mnemonicParsing="false" onAction="#save" text="Save" />
                   <MenuItem mnemonicParsing="false" onAction="#load" text="Open Drawing" />
-              <MenuItem mnemonicParsing="false" text="Quit" />
+                  <MenuItem mnemonicParsing="false" onAction="#save" text="Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveAs" text="Save As" />
+              <MenuItem mnemonicParsing="false" onAction="#exit" text="Quit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -52,14 +56,14 @@
       </MenuBar>
       <AnchorPane>
          <children>
-            <BorderPane prefHeight="555.0" prefWidth="819.0" style="-fx-background-color: #616161;" AnchorPane.bottomAnchor="-43.0">
+            <BorderPane prefHeight="555.0" prefWidth="887.0" style="-fx-background-color: #616161;" AnchorPane.bottomAnchor="-43.0">
                <center>
                   <Canvas fx:id="canvas" height="458.0" onMousePressed="#onCanvasClick" width="592.0" />
                </center>
                <top>
                   <ToolBar prefHeight="46.0" prefWidth="819.0" BorderPane.alignment="CENTER">
                     <items>
-                        <JFXComboBox fx:id="toolsComboBox" onAction="#onToolSelected" prefHeight="29.0" prefWidth="89.0" />
+                        <JFXComboBox fx:id="toolsComboBox" onAction="#onToolSelected" prefHeight="29.0" prefWidth="122.0" />
                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="37.0" text="Fill " />
                         <JFXColorPicker fx:id="fillColorPicker" prefHeight="26.0" prefWidth="84.0" />
                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="63.0" text="Stroke " />
@@ -67,18 +71,51 @@
                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="75.0" text="Thickness" />
                         <JFXSlider fx:id="strokeSlider" max="30.0" min="0.1" value="10.0" />
                         <Canvas fx:id="strokePreviewCanvas" height="30.0" width="30.0" />
-                        <JFXButton>
+                        <JFXButton onAction="#undo">
                            <graphic>
-                              <JFXBadge fx:id="undoBadge" onMouseClicked="#undo" prefHeight="34.0" prefWidth="35.0" />
+                              <JFXBadge fx:id="undoBadge" prefHeight="34.0" prefWidth="35.0" />
                            </graphic>
+                           <ripplerFill>
+                              <RadialGradient centerX="0.5" centerY="0.5" radius="0.2976190476190476">
+                                 <stops>
+                                    <Stop color="#303fda" />
+                                    <Stop color="#303fda" offset="0.007407407407407408" />
+                                    <Stop color="#2d3ed800" offset="1.0" />
+                                 </stops>
+                              </RadialGradient>
+                           </ripplerFill>
                         </JFXButton>
-                        <JFXBadge fx:id="redoBadge" onMouseClicked="#redo" prefHeight="34.0" prefWidth="35.0" />
-                        <JFXBadge fx:id="saveBadge" onMouseClicked="#save" prefHeight="34.0" prefWidth="41.0" />
+                        <JFXButton onAction="#redo">
+                           <graphic>
+                              <JFXBadge fx:id="redoBadge" prefHeight="34.0" prefWidth="35.0" />
+                           </graphic>
+                           <ripplerFill>
+                              <RadialGradient centerX="0.5" centerY="0.5" radius="0.2976190476190476">
+                                 <stops>
+                                    <Stop color="#2d3ed8" />
+                                    <Stop color="WHITE" offset="1.0" />
+                                 </stops>
+                              </RadialGradient>
+                           </ripplerFill>
+                        </JFXButton>
+                        <JFXButton onAction="#save">
+                           <graphic>
+                              <JFXBadge fx:id="saveBadge" prefHeight="34.0" prefWidth="35.0" />
+                           </graphic>
+                           <ripplerFill>
+                              <RadialGradient centerX="0.5" centerY="0.5" radius="0.2976190476190476">
+                                 <stops>
+                                    <Stop color="#2d3ed8" />
+                                    <Stop color="#ffffff4c" offset="1.0" />
+                                 </stops>
+                              </RadialGradient>
+                           </ripplerFill>
+                        </JFXButton>
                     </items>
                   </ToolBar>
                </top>
                <left>
-                  <VBox prefHeight="469.0" prefWidth="119.0" style="-fx-background-color: #EEE;" BorderPane.alignment="CENTER">
+                  <VBox prefHeight="499.0" prefWidth="134.0" style="-fx-background-color: #EEE;" BorderPane.alignment="CENTER">
                      <children>
                         <VBox fx:id="selectedShapeLayout" alignment="CENTER" disable="true" prefHeight="200.0" prefWidth="119.0" spacing="5.0">
                            <children>
@@ -100,7 +137,7 @@
                               </JFXColorPicker>
                               <Label prefHeight="31.0" prefWidth="57.0" text=" Stroke" />
                               <JFXColorPicker fx:id="selectedShapeStrokeColorPicker" prefHeight="26.0" prefWidth="118.0" />
-                              <JFXButton fx:id="u" onAction="#updateSelected" prefHeight="26.0" prefWidth="85.0" text="Update" />
+                              <JFXButton fx:id="u" onAction="#updateSelectedShapes" prefHeight="26.0" prefWidth="85.0" text="Update" />
                            </children>
                         </VBox>
                         <Region prefHeight="35.0" prefWidth="119.0" />
@@ -110,7 +147,25 @@
                            </VBox.margin>
                         </Label>
                         <JFXListView fx:id="shapesListView" onMousePressed="#onShapeSelect" prefHeight="282.0" prefWidth="119.0" />
-                        <JFXButton onAction="#deselect" prefHeight="26.0" prefWidth="141.0" text="Deselect" />
+                        <HBox>
+                           <children>
+                              <JFXButton onAction="#deselect" prefHeight="64.0" prefWidth="119.0" text="Deselect" />
+                              <JFXButton onAction="#deleteSelectedShapes">
+                                 <graphic>
+                                    <JFXBadge fx:id="deleteBadge" prefHeight="34.0" prefWidth="35.0" />
+                                 </graphic>
+                                 <ripplerFill>
+                                    <RadialGradient centerX="0.5" centerY="0.5" radius="0.2976190476190476">
+                                       <stops>
+                                          <Stop color="#303fda" />
+                                          <Stop color="#303fda" offset="0.007407407407407408" />
+                                          <Stop color="TRANSPARENT" offset="1.0" />
+                                       </stops>
+                                    </RadialGradient>
+                                 </ripplerFill>
+                              </JFXButton>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </left>

@@ -21,6 +21,7 @@ public class Painter implements DrawingEngine {
     private Stack<ICommand> commands, undoCommands;
     private Saver save;
     private Loader load;
+    private static List<Class<? extends Shape>> supportedShapes;
 
     public Painter () {
         shapes = new ArrayList<>();
@@ -101,7 +102,7 @@ public class Painter implements DrawingEngine {
 
     @Override
     public List<Class<? extends Shape>> getSupportedShapes() {
-        List<Class<? extends Shape>> supportedShapes = new LinkedList<>();
+        supportedShapes = new LinkedList<>();
         supportedShapes.add(Circle.class);
         supportedShapes.add(Rectangle.class);
         supportedShapes.add(Ellipse.class);
@@ -155,5 +156,9 @@ public class Painter implements DrawingEngine {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<Class<? extends Shape>> getShapeClasses () {
+        return supportedShapes;
     }
 }

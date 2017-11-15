@@ -40,7 +40,6 @@ public class Loader {
                 JSONObject obj = XML.toJSONObject(jsonArr.get(i));
                 Shape shape = factory.createShape(obj.get("shapeType").toString());
                 shape.setProperties(properties.get(i));
-//                shape.setPosition(new Point2D((Double) obj.get("centerX"), (Double) obj.get("centerY")));
                 shape.setFillColor(new Color((Double) obj.get("fillColorR"),
                         (Double) obj.get("fillColorG"),
                         (Double) obj.get("fillColorB"),
@@ -56,6 +55,10 @@ public class Loader {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
             e.printStackTrace();
         }
         return shapes;
