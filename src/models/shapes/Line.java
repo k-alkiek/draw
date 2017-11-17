@@ -22,6 +22,7 @@ public class Line extends AbstractShape implements Serializable {
                 shapeProperties.get("y1"),
                 shapeProperties.get("x2"),
                 shapeProperties.get("y2"));
+        setBoundaries();
     }
 
     @Override

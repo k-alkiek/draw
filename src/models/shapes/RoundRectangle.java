@@ -18,22 +18,23 @@ public class RoundRectangle extends AbstractShape implements Serializable {
     }
     @Override
     public void draw(GraphicsContext canvas) {
-        setAtrributes();
+        setAttributes();
         canvas.setLineWidth(shapeProperties.get("borderWidth"));
         canvas.setFill(fillColor);
         canvas.fillRoundRect(shapeProperties.get("x1"),
                 shapeProperties.get("y1"),
                 width,
                 height,
-                1,
-                1);
+                2,
+                2);
         canvas.setStroke(perimeterColor);
         canvas.strokeRoundRect(shapeProperties.get("x1"),
                 shapeProperties.get("y1"),
                 width,
                 height,
-                1,
-                1);
+                2,
+                2);
+        setBoundaries();
     }
 
     @Override

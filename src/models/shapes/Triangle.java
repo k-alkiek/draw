@@ -9,6 +9,7 @@ import java.util.HashMap;
  * Created by khaledabdelfattah on 11/12/17.
  */
 public class Triangle extends AbstractShape {
+    private double[] xPoints, yPoints;
     public Triangle () {
         super();
         shapeProperties = new HashMap<>();
@@ -19,13 +20,17 @@ public class Triangle extends AbstractShape {
         shapeProperties.put("x3", 0.0);
         shapeProperties.put("y3", 0.0);
         shapeProperties.put("borderWidth", 0.0);
+        shapeProperties.put("upperPointX", 0.0);
+        shapeProperties.put("upperPointY", 0.0);
+        shapeProperties.put("bottomPointX", 0.0);
+        shapeProperties.put("bottomPointY", 0.0);
     }
     @Override
     public void draw(GraphicsContext canvas) {
-        double[] xPoints = {shapeProperties.get("x1"),
+        xPoints = new double[] {shapeProperties.get("x1"),
                 shapeProperties.get("x2"),
                 shapeProperties.get("x3")};
-        double[] yPoints = {shapeProperties.get("y1"),
+        yPoints = new double[] {shapeProperties.get("y1"),
                 shapeProperties.get("y2"),
                 shapeProperties.get("y3")};
         canvas.setLineWidth(shapeProperties.get("borderWidth"));
@@ -33,6 +38,7 @@ public class Triangle extends AbstractShape {
         canvas.fillPolygon(xPoints, yPoints, 3);
         canvas.setStroke(perimeterColor);
         canvas.strokePolygon(xPoints, yPoints, 3);
+        setBoundaries();
     }
 
     @Override
