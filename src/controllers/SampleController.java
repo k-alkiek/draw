@@ -252,8 +252,7 @@ public class SampleController implements Initializable{
                 properties.put("borderWidth", strokeSlider.getValue());
 
                 shape.setProperties(properties);
-                shape.setFillColor(fillColorPicker.getValue());
-                shape.setColor(strokeColorPicker.getValue());
+                setShapeColors(shape);
                 addShape(shape);
                 painter.refresh(canvas.getGraphicsContext2D());
                 clickHistory.clear();
@@ -269,10 +268,11 @@ public class SampleController implements Initializable{
     private void canvasDrag(Shape shape, Point2D originPoint) {
         Map<String, Double> properties = new HashMap<String, Double>();
 
+
         properties.put("borderWidth", strokeSlider.getValue());
 
         setShapeColors(shape);
-        EventHandler<? super MouseEvent> drag =  canvas.getOnMouseDragged();
+//        EventHandler<? super MouseEvent> drag =  canvas.getOnMouseDragged();
         canvas.setOnMouseDragged(mouseEvent->{
             if ( shape instanceof Line || (mouseEvent.getX() >= originPoint.getX() && mouseEvent.getY() >= originPoint.getY())) {
                 properties.put("x1", originPoint.getX());
@@ -304,11 +304,11 @@ public class SampleController implements Initializable{
             refresh();
             painter.removeShapePreview(shape);
         });
-        canvas.setOnMouseDragReleased(event -> {
+        addShape(shape);
+        canvas.setOnMouseReleased(event -> {
+            canvas.setOnMouseDragged(null);
             System.out.println("aszxqw");
         });
-        addShape(shape);
-//        canvas.setOnMouseDragged(null);
     }
 
     private void initializeBadges() {
@@ -370,8 +370,13 @@ public class SampleController implements Initializable{
     }
 
     private void setShapeColors(Shape shape) {
-        shape.setFillColor(fillColorPicker.getValue());
-        shape.setColor(strokeColorPicker.getValue());
+        if (shape instanceof Line) {
+            shape.setFillColor(strokeColorPicker.getValue());
+        }
+        else {
+            shape.setColor(strokeColorPicker.getValue());
+            shape.setFillColor(fillColorPicker.getValue());
+        }
     }
 
     private void addShape(Shape shape) {
