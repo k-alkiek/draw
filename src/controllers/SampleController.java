@@ -3,6 +3,8 @@ package controllers;
 import com.jfoenix.controls.*;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -56,6 +58,9 @@ public class SampleController implements Initializable{
 
     @FXML private JFXListView<Label> shapesListView;
 
+    @FXML private Label xLabel;
+    @FXML private Label yLabel;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         painter = new Painter();
@@ -68,6 +73,18 @@ public class SampleController implements Initializable{
         shapesListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         clear();
+    }
+
+    @FXML
+    void showCoordinates(MouseEvent event) {
+        xLabel.setText("x: " + (int) event.getX());
+        yLabel.setText("y: " + (int) event.getY());
+    }
+
+    @FXML
+    void hideCoordinates() {
+        xLabel.setText("");
+        yLabel.setText("");
     }
 
     @FXML
@@ -248,7 +265,7 @@ public class SampleController implements Initializable{
         properties.put("borderWidth", strokeSlider.getValue());
 
         setShapeColors(shape);
-
+        EventHandler<? super MouseEvent> drag =  canvas.getOnMouseDragged();
         canvas.setOnMouseDragged(mouseEvent->{
             if ( shape instanceof Line || (mouseEvent.getX() >= originPoint.getX() && mouseEvent.getY() >= originPoint.getY())) {
                 properties.put("x1", originPoint.getX());
@@ -279,13 +296,12 @@ public class SampleController implements Initializable{
             painter.addShapePreview(shape);
             refresh();
             painter.removeShapePreview(shape);
-            System.out.println(shape);
-            System.out.println("X coord: " + originPoint.getX());
-            System.out.println("Y coord: " + originPoint.getY());
-            System.out.println("X coord: " + mouseEvent.getX());
-            System.out.println("Y coord: " + mouseEvent.getY());
+        });
+        canvas.setOnMouseDragReleased(event -> {
+            System.out.println("aszxqw");
         });
         addShape(shape);
+//        canvas.setOnMouseDragged(null);
     }
 
     private void initializeBadges() {
