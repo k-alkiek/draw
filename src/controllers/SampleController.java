@@ -1,14 +1,20 @@
 package controllers;
 
 import com.jfoenix.controls.*;
+import com.sun.org.apache.regexp.internal.RE;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -18,6 +24,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.interfaces.Shape;
 import models.shapes.Line;
+import models.shapes.Rectangle;
 import models.shapes.ShapesFactory;
 import models.shapes.Triangle;
 import com.google.common.collect.BiMap;
@@ -35,6 +42,8 @@ public class SampleController implements Initializable{
     List<Point2D> clickHistory = new ArrayList<Point2D>();
 
     @FXML private Canvas canvas;
+
+    @FXML private Menu shapesMenu;
 
     @FXML private JFXComboBox<Label> toolsComboBox;
     @FXML private JFXColorPicker fillColorPicker;
@@ -88,20 +97,21 @@ public class SampleController implements Initializable{
 
     @FXML
     void onShapeSelect() {
+        refresh();
         if (selectedShapes().size() == 1) {
             selectedShapeLayout.setDisable(false);
             Shape shape = selectedShapes().get(0);
             selectedShapeLabel.setText(shapesMap.inverse().get(shape));
             selectedShapeFillColorPicker.setValue(shape.getFillColor());
             selectedShapeStrokeColorPicker.setValue(shape.getColor());
-            drawBoundingBox();
+            drawBoundingBox(selectedShapes());
         }
         else if (selectedShapes().size() > 1) {
             selectedShapeLayout.setDisable(false);
             selectedShapeLabel.setText("Shapes");
             selectedShapeFillColorPicker.setValue(Color.BLACK);
             selectedShapeStrokeColorPicker.setValue(Color.WHITE);
-            drawBoundingBox();
+            drawBoundingBox(selectedShapes());
         }
         else {
             deselectShapes();
@@ -116,13 +126,26 @@ public class SampleController implements Initializable{
         removeBoundingBox();
     }
 
-    private void drawBoundingBox() {
-        double minX, minY;
+    private void drawBoundingBox(List<Shape> shapes) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        if (shapes.get(0) instanceof Rectangle) {
+            Map<String, Double> map = shapes.get(0).getProperties();
+            Point2D upperLeftCorner = new Point2D(map.get("x1"), map.get("y1"));
+            Point2D lowerRightCorner= new Point2D(map.get("x2"), map.get("y2"));
+            gc.setStroke(Color.BLACK);
+            gc.setLineDashes(7);
+            gc.setLineWidth(1);
+            gc.strokeRect(upperLeftCorner.getX() - 5, upperLeftCorner.getY() - 5,
+                    lowerRightCorner.getX() - upperLeftCorner.getX() + 10, lowerRightCorner.getY() - upperLeftCorner.getY() + 10);
+
+        }
         for (Shape shape : selectedShapes()) {
         }
+        resetGraphicsContext();
     }
 
     private void removeBoundingBox() {
+        refresh();
     }
 
 
@@ -343,7 +366,32 @@ public class SampleController implements Initializable{
     }
 
     private void initializeShapesMenuItem() {
+        List<Class<? extends Shape>> shapeClasses = painter.getSupportedShapes();
 
+        for (Class<? extends Shape> shapeClass : shapeClasses) {
+            String shapeName = shapeClass.getSimpleName();
+            MenuItem shapeMenuItem = setupShapeMenuItem(shapeClass);
+
+
+            shapesMenu.getItems().add(shapeMenuItem);
+        }
+    }
+
+    private MenuItem setupShapeMenuItem(Class<? extends Shape> shapeClass) {
+        MenuItem shapeMenuItem = new MenuItem(shapeClass.getSimpleName());
+        shapeMenuItem.setOnAction(event -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("views/new_shape.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle("New " + shapeClass.getSimpleName());
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        return shapeMenuItem;
     }
 
     private void initializeTools() {
@@ -391,6 +439,7 @@ public class SampleController implements Initializable{
     private void setShapeColors(Shape shape) {
         if (shape instanceof Line) {
             shape.setFillColor(strokeColorPicker.getValue());
+            shape.setColor(Color.WHITE);
         }
         else {
             shape.setColor(strokeColorPicker.getValue());
@@ -408,6 +457,13 @@ public class SampleController implements Initializable{
     private void refresh() {
         clear();
         painter.refresh(canvas.getGraphicsContext2D());
+    }
+
+    private void resetGraphicsContext() {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setLineDashes(0);
+        gc.setFill(fillColorPicker.getValue());
+        gc.setStroke(strokeColorPicker.getValue());
     }
 
     private void refreshShapeList() {

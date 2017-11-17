@@ -40,11 +40,7 @@
 
                 <MenuItem mnemonicParsing="false" text="Undo" />
                   <MenuItem mnemonicParsing="false" text="Redo" />
-                  <Menu mnemonicParsing="false" text="Draw Shape">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                    </items>
-                  </Menu>
+                  <Menu fx:id="shapesMenu" mnemonicParsing="false" text="Draw Shape" />
                   <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
@@ -127,7 +123,7 @@
                <left>
                   <VBox prefHeight="477.0" prefWidth="118.0" style="-fx-background-color: #EEE;" BorderPane.alignment="CENTER">
                      <children>
-                        <VBox fx:id="selectedShapeLayout" alignment="CENTER" disable="true" prefHeight="191.0" prefWidth="118.0" spacing="5.0">
+                        <VBox fx:id="selectedShapeLayout" alignment="CENTER" disable="true" prefHeight="190.0" prefWidth="118.0" spacing="5.0">
                            <children>
                               <Label fx:id="selectedShapeLabel" alignment="CENTER" prefHeight="16.0" prefWidth="124.0" text="Selected Shape">
                                  <padding>
@@ -137,7 +133,7 @@
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin></Label>
-                              <JFXColorPicker fx:id="selectedShapeFillColorPicker" prefHeight="36.0" prefWidth="118.0">
+                              <JFXColorPicker fx:id="selectedShapeFillColorPicker" prefHeight="42.0" prefWidth="118.0">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
@@ -146,7 +142,7 @@
                                  </opaqueInsets>
                               </JFXColorPicker>
                               <Label prefHeight="31.0" prefWidth="57.0" text=" Stroke" />
-                              <JFXColorPicker fx:id="selectedShapeStrokeColorPicker" prefHeight="33.0" prefWidth="118.0" />
+                              <JFXColorPicker fx:id="selectedShapeStrokeColorPicker" prefHeight="40.0" prefWidth="118.0" />
                               <JFXButton fx:id="u" onAction="#updateSelectedShapes" prefHeight="26.0" prefWidth="85.0" text="Update" />
                            </children>
                         </VBox>
