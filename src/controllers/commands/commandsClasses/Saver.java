@@ -18,7 +18,6 @@ public class Saver {
     public Saver (String path, ArrayList<Shape> shapes) throws FileNotFoundException {
         try {
             savedFile = new FileOutputStream(path);
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

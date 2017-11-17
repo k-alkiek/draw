@@ -27,14 +27,14 @@ public class LoadExtension {
         Enumeration<JarEntry> e = jarFile.entries();
 
         URL[] urls = { new URL("jar:file:" + path +"!/") };
-        URLClassLoader classLoader= URLClassLoader.newInstance(urls);
+        URLClassLoader classLoader = URLClassLoader.newInstance(urls);
 
-        while (e.hasMoreElements()) {
+        while(e.hasMoreElements()) {
             JarEntry jarEntry = e.nextElement();
             if(jarEntry.isDirectory() || !jarEntry.getName().endsWith(".class")){
                 continue;
             }
-            String className = jarEntry.getName().substring(0,jarEntry.getName().length()-6);
+            String className = jarEntry.getName().substring(0, jarEntry.getName().length() - 6);
             className = className.replace('/', '.');
             Class newClass = classLoader.loadClass(className);
             if (newClass != Shape.class && Shape.class.isAssignableFrom(newClass))

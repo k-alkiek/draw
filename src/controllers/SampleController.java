@@ -56,7 +56,7 @@ public class SampleController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        painter = new Painter();
+        painter = Painter.getInstanceOfPainter();
         shapesMap = HashBiMap.create();
         filePath = null;
         initializeStrokePreview();

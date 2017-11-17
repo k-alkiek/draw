@@ -22,11 +22,19 @@ public class Painter implements DrawingEngine {
     private Saver save;
     private Loader load;
     private static List<Class<? extends Shape>> supportedShapes;
+    private static Painter painter = null;
 
-    public Painter () {
+    private Painter () {
         shapes = new ArrayList<>();
         commands = new Stack<>();
         undoCommands = new Stack<>();
+    }
+
+    public static Painter getInstanceOfPainter() {
+        if (painter == null) {
+            painter = new Painter();
+        }
+        return painter;
     }
 
     @Override
@@ -41,8 +49,7 @@ public class Painter implements DrawingEngine {
         try {
             add = new AddShapeCommand(shape, shapes);
             add.execute();
-            commands.push(add);
-            undoCommands.clear();
+            addCommand(add);
         } catch (EmptyStackException exception) {
             throw exception;
         }
@@ -62,8 +69,7 @@ public class Painter implements DrawingEngine {
         try {
             remove = new RemoveShapeCommand(shape, shapes);
             remove.execute();
-            commands.add(remove);
-            undoCommands.clear();
+            addCommand(remove);
         } catch (EmptyStackException exception) {
             throw exception;
         }
@@ -83,8 +89,7 @@ public class Painter implements DrawingEngine {
         try {
             update = new UpdateShapeCommand(oldShape, newShape, shapes);
             update.execute();
-            commands.push(update);
-            undoCommands.clear();
+            addCommand(update);
         } catch (EmptyStackException exception) {
             throw exception;
         }
@@ -109,6 +114,8 @@ public class Painter implements DrawingEngine {
         supportedShapes.add(Line.class);
         supportedShapes.add(RoundRectangle.class);
         supportedShapes.add(Triangle.class);
+        supportedShapes.add(Square.class);
+        supportedShapes.add(Polygon.class);
         return supportedShapes;
     }
 
@@ -158,7 +165,15 @@ public class Painter implements DrawingEngine {
         }
     }
 
-    public static List<Class<? extends Shape>> getShapeClasses () {
+    private void addCommand(ICommand command) {
+        commands.push(command);
+        undoCommands.clear();
+    }
+    public static List<Class<? extends Shape>> getShapeClasses() {
         return supportedShapes;
+    }
+    public static void addNewShapes(String path) throws IOException, ClassNotFoundException {
+        LoadExtension loadExtension = new LoadExtension(path);
+        supportedShapes.addAll(loadExtension.addExtension());
     }
 }
