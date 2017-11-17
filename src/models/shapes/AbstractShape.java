@@ -76,11 +76,14 @@ public abstract class AbstractShape implements Shape, Serializable {
     public abstract Object clone() throws CloneNotSupportedException;
 
     protected void cloning (Shape newShape, Shape oldShape) {
+        Map<String, Double> newShapeProps = new HashMap<>();
         for(String key : shapeProperties.keySet()) {
             if (key.charAt(0) == 'x' || key.charAt(0) == 'y')
-                shapeProperties.put(key, shapeProperties.get(key) + 5);
+                newShapeProps.put(key, shapeProperties.get(key) + 20);
+            else
+                newShapeProps.put(key, shapeProperties.get(key));
         }
-        newShape.setProperties(shapeProperties);
+        newShape.setProperties(newShapeProps);
         newShape.setColor(perimeterColor);
         newShape.setFillColor(fillColor);
     }
