@@ -128,19 +128,27 @@ public class SampleController implements Initializable{
 
     private void drawBoundingBox(List<Shape> shapes) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        if (shapes.get(0) instanceof Rectangle) {
-            Map<String, Double> map = shapes.get(0).getProperties();
-            Point2D upperLeftCorner = new Point2D(map.get("x1"), map.get("y1"));
-            Point2D lowerRightCorner= new Point2D(map.get("x2"), map.get("y2"));
-            gc.setStroke(Color.BLACK);
-            gc.setLineDashes(7);
-            gc.setLineWidth(1);
-            gc.strokeRect(upperLeftCorner.getX() - 5, upperLeftCorner.getY() - 5,
-                    lowerRightCorner.getX() - upperLeftCorner.getX() + 10, lowerRightCorner.getY() - upperLeftCorner.getY() + 10);
+        double minX = canvas.getWidth();
+        double minY = canvas.getHeight();
+        double maxX = 0;
+        double maxY = 0;
 
-        }
         for (Shape shape : selectedShapes()) {
+            double x1 = shape.getProperties().get("upperPointX");
+            double y1 = shape.getProperties().get("upperPointY");
+            if (x1 < minX) minX = x1;
+            if (y1 < minY) minY = y1;
+
+            double x2 = shape.getProperties().get("bottomPointX");
+            double y2 = shape.getProperties().get("bottomPointY");
+            if (x2 > maxX) maxX = x2;
+            if (y2 > maxY) maxY = y2;
         }
+        gc.setStroke(Color.BLACK);
+        gc.setLineDashes(7);
+        gc.setLineWidth(1);
+        gc.strokeRect(minX - 5, minY - 5, maxX - minX + 10,maxY - minY + 10);
+
         resetGraphicsContext();
     }
 
