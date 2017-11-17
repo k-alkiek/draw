@@ -25,6 +25,10 @@ public abstract class AbstractShape implements Shape, Serializable {
         shapeProperties.put("x2", 0.0);
         shapeProperties.put("y2", 0.0);
         shapeProperties.put("borderWidth", 0.0);
+        shapeProperties.put("upperPointX", 0.0);
+        shapeProperties.put("upperPointY", 0.0);
+        shapeProperties.put("bottomPointX", 0.0);
+        shapeProperties.put("bottomPointY", 0.0);
     }
 
     @Override
@@ -88,8 +92,30 @@ public abstract class AbstractShape implements Shape, Serializable {
         newShape.setFillColor(fillColor);
     }
 
-    protected void setAtrributes() {
+    protected void setAttributes() {
         height = Math.abs(shapeProperties.get("y1") - shapeProperties.get("y2"));
         width = Math.abs(shapeProperties.get("x1") - shapeProperties.get("x2"));
+        setBoundaries();
+    }
+
+    protected void setBoundaries() {
+        Double x1, y1, x2, y2;
+        x1 = shapeProperties.get("x1");
+        x2 = shapeProperties.get("x2");
+        y1 = shapeProperties.get("y1");
+        y2 = shapeProperties.get("y2");
+        for (String key : shapeProperties.keySet()) {
+            if (key.charAt(0) == 'x') {
+                x1 = Math.min(x1, shapeProperties.get(key));
+                x2 = Math.max(x2, shapeProperties.get(key));
+            } else if (key.charAt(0) == 'y') {
+                y1 = Math.min(y1, shapeProperties.get(key));
+                y2 = Math.max(y2, shapeProperties.get(key));
+            }
+        }
+        shapeProperties.put("upperPointX", x1);
+        shapeProperties.put("upperPointY", y1);
+        shapeProperties.put("bottomPointX", x2);
+        shapeProperties.put("bottomPointY", y2);
     }
 }

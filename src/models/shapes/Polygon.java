@@ -19,6 +19,10 @@ public class Polygon extends AbstractShape {
             shapeProperties.put("x" + i, 0.0);
             shapeProperties.put("y" + i, 0.0);
         }
+        shapeProperties.put("upperPointX", 0.0);
+        shapeProperties.put("upperPointY", 0.0);
+        shapeProperties.put("bottomPointX", 0.0);
+        shapeProperties.put("bottomPointY", 0.0);
     }
 
     public Polygon (int n, double[] xPoints, double[] yPoints) {
@@ -40,6 +44,7 @@ public class Polygon extends AbstractShape {
         canvas.fillPolygon(xPoints, yPoints, n);
         canvas.setStroke(perimeterColor);
         canvas.strokePolygon(xPoints, yPoints, n);
+        setBoundaries();
     }
 
     @Override
