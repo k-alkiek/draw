@@ -67,6 +67,7 @@ public class SampleController implements Initializable{
         initializeStrokePreview();
         initializeTools();
         initializeBadges();
+        initializeShapesMenuItem();
 
         shapesListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -142,10 +143,6 @@ public class SampleController implements Initializable{
             String shapeName = generateUniqueName(newShape);
             shapesMap.put(shapeName, newShape);
 
-//            String shapeName = shapesMap.inverse().get(shape);
-//            shapesMap.remove(shapeName);
-
-//            shapesMap.put(shapeName, newShape);
             refreshShapeList();
             refresh();
         }
@@ -174,8 +171,6 @@ public class SampleController implements Initializable{
         refresh();
         refreshShapeList();
     }
-
-
 
     @FXML
     void undo() {
@@ -345,6 +340,10 @@ public class SampleController implements Initializable{
             stackPane.getChildren().add(icon);
             badge.getChildren().add(stackPane);
         }
+    }
+
+    private void initializeShapesMenuItem() {
+
     }
 
     private void initializeTools() {
