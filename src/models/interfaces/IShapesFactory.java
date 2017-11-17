@@ -10,5 +10,5 @@ public interface IShapesFactory {
      * @param type type of shape
      * @return instance of specific shape
      */
-    public Shape createShape(String type);
+    public Shape createShape(String type) throws IllegalAccessException, InstantiationException;
 }

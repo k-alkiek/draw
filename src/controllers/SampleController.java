@@ -63,7 +63,7 @@ public class SampleController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        painter = new Painter();
+        painter = Painter.getInstanceOfPainter();
         shapesMap = HashBiMap.create();
         filePath = null;
         initializeStrokePreview();
@@ -228,7 +228,14 @@ public class SampleController implements Initializable{
 
     @FXML
     void onCanvasClick(MouseEvent click) {
-        Shape shape = factory.createShape(toolsComboBox.getValue().getText());
+        Shape shape = null;
+        try {
+            shape = factory.createShape(toolsComboBox.getValue().getText());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
 
         if (shape instanceof Triangle) {
             if (clickHistory.size() < 2) {

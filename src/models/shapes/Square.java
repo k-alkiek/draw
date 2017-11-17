@@ -16,10 +16,11 @@ public class Square extends AbstractShape {
 
     @Override
     public void draw(GraphicsContext canvas) {
-        rec = new Rectangle(shapeProperties.get("length"));
-        rec.setPosition(centrePoint);
+        setAtrributes();
+        rec = new Rectangle(width);
         rec.setColor(perimeterColor);
         rec.setFillColor(fillColor);
+        rec.setProperties(shapeProperties);
         rec.draw(canvas);
     }
 

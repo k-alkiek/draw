@@ -11,9 +11,11 @@ import java.util.ArrayList;
 public class RemoveShapeCommand implements ICommand {
     private ArrayList<Shape> shapes;
     private Shape shape;
+    private int index;
     public RemoveShapeCommand(Shape shape, ArrayList<Shape> shapes) {
         this.shapes = shapes;
         this.shape = shape;
+        index = shapes.indexOf(shape);
     }
     @Override
     public void execute() {
@@ -22,6 +24,6 @@ public class RemoveShapeCommand implements ICommand {
 
     @Override
     public void unexecute() {
-        shapes.add(shape);
+        shapes.add(index, shape);
     }
 }
