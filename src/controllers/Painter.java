@@ -39,8 +39,8 @@ public class Painter implements DrawingEngine {
 
     @Override
     public void refresh(GraphicsContext canvas) {
-        for (int i = 0; i < shapes.size(); i ++) {
-            shapes.get(i).draw(canvas);
+        for (Shape shape : shapes) {
+            shape.draw(canvas);
         }
     }
 
