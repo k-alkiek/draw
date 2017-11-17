@@ -13,6 +13,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -20,7 +21,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
-<?import javafx.scene.text.Font?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="584.0" prefWidth="887.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SampleController">
    <children>
@@ -70,7 +70,7 @@
                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="63.0" text="Stroke " />
                         <JFXColorPicker fx:id="strokeColorPicker" prefHeight="26.0" prefWidth="86.0" />
                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="75.0" text="Thickness" />
-                        <JFXSlider fx:id="strokeSlider" max="30.0" min="0.1" value="10.0" />
+                        <JFXSlider fx:id="strokeSlider" max="30.0" min="0.1" value="5.0" />
                         <Canvas fx:id="strokePreviewCanvas" height="30.0" width="30.0" />
                         <JFXButton onAction="#undo">
                            <graphic>
@@ -85,6 +85,9 @@
                                  </stops>
                               </RadialGradient>
                            </ripplerFill>
+                           <tooltip>
+                              <Tooltip text="Undo" />
+                           </tooltip>
                         </JFXButton>
                         <JFXButton onAction="#redo">
                            <graphic>
@@ -98,6 +101,9 @@
                                  </stops>
                               </RadialGradient>
                            </ripplerFill>
+                           <tooltip>
+                              <Tooltip text="Redo" />
+                           </tooltip>
                         </JFXButton>
                         <JFXButton onAction="#save">
                            <graphic>
@@ -111,6 +117,9 @@
                                  </stops>
                               </RadialGradient>
                            </ripplerFill>
+                           <tooltip>
+                              <Tooltip text="Save" />
+                           </tooltip>
                         </JFXButton>
                     </items>
                   </ToolBar>
@@ -118,7 +127,7 @@
                <left>
                   <VBox prefHeight="477.0" prefWidth="118.0" style="-fx-background-color: #EEE;" BorderPane.alignment="CENTER">
                      <children>
-                        <VBox fx:id="selectedShapeLayout" alignment="CENTER" disable="true" prefHeight="200.0" prefWidth="119.0" spacing="5.0">
+                        <VBox fx:id="selectedShapeLayout" alignment="CENTER" disable="true" prefHeight="191.0" prefWidth="118.0" spacing="5.0">
                            <children>
                               <Label fx:id="selectedShapeLabel" alignment="CENTER" prefHeight="16.0" prefWidth="124.0" text="Selected Shape">
                                  <padding>
@@ -128,7 +137,7 @@
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin></Label>
-                              <JFXColorPicker fx:id="selectedShapeFillColorPicker" prefHeight="26.0" prefWidth="118.0">
+                              <JFXColorPicker fx:id="selectedShapeFillColorPicker" prefHeight="36.0" prefWidth="118.0">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
@@ -137,7 +146,7 @@
                                  </opaqueInsets>
                               </JFXColorPicker>
                               <Label prefHeight="31.0" prefWidth="57.0" text=" Stroke" />
-                              <JFXColorPicker fx:id="selectedShapeStrokeColorPicker" prefHeight="26.0" prefWidth="118.0" />
+                              <JFXColorPicker fx:id="selectedShapeStrokeColorPicker" prefHeight="33.0" prefWidth="118.0" />
                               <JFXButton fx:id="u" onAction="#updateSelectedShapes" prefHeight="26.0" prefWidth="85.0" text="Update" />
                            </children>
                         </VBox>
@@ -148,12 +157,42 @@
                            </VBox.margin>
                         </Label>
                         <JFXListView fx:id="shapesListView" onMousePressed="#onShapeSelect" prefHeight="282.0" prefWidth="163.0" />
-                        <HBox>
+                        <HBox prefHeight="66.0" prefWidth="118.0">
                            <children>
-                              <JFXButton onAction="#deselect" prefHeight="26.0" prefWidth="242.0" text="Deselect">
-                                 <font>
-                                    <Font name="Roboto Black" size="10.0" />
-                                 </font></JFXButton>
+                              <JFXButton onAction="#deselectShapes">
+                                 <graphic>
+                                    <JFXBadge fx:id="deselectBadge" prefHeight="34.0" prefWidth="35.0" />
+                                 </graphic>
+                                 <ripplerFill>
+                                    <RadialGradient centerX="0.5" centerY="0.5" radius="0.2976190476190476">
+                                       <stops>
+                                          <Stop color="#303fda" />
+                                          <Stop color="#303fda" offset="0.007407407407407408" />
+                                          <Stop color="TRANSPARENT" offset="1.0" />
+                                       </stops>
+                                    </RadialGradient>
+                                 </ripplerFill>
+                                 <tooltip>
+                                    <Tooltip text="Deselect All" />
+                                 </tooltip>
+                              </JFXButton>
+                              <JFXButton onAction="#cloneSelectedShapes">
+                                 <graphic>
+                                    <JFXBadge fx:id="cloneBadge" prefHeight="34.0" prefWidth="35.0" />
+                                 </graphic>
+                                 <ripplerFill>
+                                    <RadialGradient centerX="0.5" centerY="0.5" radius="0.2976190476190476">
+                                       <stops>
+                                          <Stop color="#303fda" />
+                                          <Stop color="#303fda" offset="0.007407407407407408" />
+                                          <Stop color="TRANSPARENT" offset="1.0" />
+                                       </stops>
+                                    </RadialGradient>
+                                 </ripplerFill>
+                                 <tooltip>
+                                    <Tooltip text="Duplicate Selected" />
+                                 </tooltip>
+                              </JFXButton>
                               <JFXButton onAction="#deleteSelectedShapes">
                                  <graphic>
                                     <JFXBadge fx:id="deleteBadge" prefHeight="34.0" prefWidth="35.0" />
@@ -167,20 +206,9 @@
                                        </stops>
                                     </RadialGradient>
                                  </ripplerFill>
-                              </JFXButton>
-                              <JFXButton onAction="#deleteSelectedShapes" prefHeight="26.0" prefWidth="25.0">
-                                 <graphic>
-                                    <JFXBadge fx:id="deleteBadge1" prefHeight="34.0" prefWidth="35.0" />
-                                 </graphic>
-                                 <ripplerFill>
-                                    <RadialGradient centerX="0.5" centerY="0.5" radius="0.2976190476190476">
-                                       <stops>
-                                          <Stop color="#303fda" />
-                                          <Stop color="#303fda" offset="0.007407407407407408" />
-                                          <Stop color="TRANSPARENT" offset="1.0" />
-                                       </stops>
-                                    </RadialGradient>
-                                 </ripplerFill>
+                                 <tooltip>
+                                    <Tooltip text="Delete Selected" />
+                                 </tooltip>
                               </JFXButton>
                            </children>
                         </HBox>

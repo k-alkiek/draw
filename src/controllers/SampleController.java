@@ -3,8 +3,6 @@ package controllers;
 import com.jfoenix.controls.*;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -18,7 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import models.interfaces.Shape;
 import models.shapes.Line;
 import models.shapes.ShapesFactory;
@@ -26,7 +23,6 @@ import models.shapes.Triangle;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
@@ -49,6 +45,8 @@ public class SampleController implements Initializable{
     @FXML private JFXBadge undoBadge;
     @FXML private JFXBadge redoBadge;
     @FXML private JFXBadge saveBadge;
+    @FXML private JFXBadge deselectBadge;
+    @FXML private JFXBadge cloneBadge;
     @FXML private JFXBadge deleteBadge;
 
     @FXML private VBox selectedShapeLayout;
@@ -105,12 +103,12 @@ public class SampleController implements Initializable{
             drawBoundingBox();
         }
         else {
-            deselect();
+            deselectShapes();
         }
     }
 
     @FXML
-    void deselect() {
+    void deselectShapes() {
         selectedShapeLayout.setDisable(true);
         shapesListView.getSelectionModel().select(-1);
         selectedShapeLabel.setText("Selected Shape");
@@ -141,10 +139,14 @@ public class SampleController implements Initializable{
             newShape.setColor(selectedShapeStrokeColorPicker.getValue());
             painter.updateShape(shape, newShape);
 
-            String shapeName = shapesMap.inverse().get(shape);
-            shapesMap.remove(shapeName);
+            String shapeName = generateUniqueName(newShape);
             shapesMap.put(shapeName, newShape);
 
+//            String shapeName = shapesMap.inverse().get(shape);
+//            shapesMap.remove(shapeName);
+
+//            shapesMap.put(shapeName, newShape);
+            refreshShapeList();
             refresh();
         }
     }
@@ -154,7 +156,30 @@ public class SampleController implements Initializable{
         for (Shape shape: selectedShapes()) {
             painter.removeShape(shape);
         }
-        deselect();
+        deselectShapes();
+        refresh();
+        refreshShapeList();
+    }
+
+    @FXML
+    void cloneSelectedShapes() {
+        for (Shape shape: selectedShapes()) {
+            try {
+                addShape((Shape)shape.clone());
+            } catch (CloneNotSupportedException e) {
+                continue;
+            }
+        }
+        deselectShapes();
+        refresh();
+        refreshShapeList();
+    }
+
+
+
+    @FXML
+    void undo() {
+        painter.undo();
         refresh();
         refreshShapeList();
     }
@@ -215,13 +240,6 @@ public class SampleController implements Initializable{
     @FXML
     void exit() {
         Platform.exit();
-    }
-
-    @FXML
-    void undo() {
-        painter.undo();
-        refresh();
-        refreshShapeList();
     }
 
 
@@ -316,6 +334,8 @@ public class SampleController implements Initializable{
         map.put(undoBadge, "UNDO");
         map.put(redoBadge, "REPEAT");
         map.put(saveBadge, "SAVE");
+        map.put(deselectBadge, "TIMES");
+        map.put(cloneBadge, "CLONE");
         map.put(deleteBadge, "TRASH");
 
         for (JFXBadge badge : map.keySet()) {
