@@ -1,7 +1,6 @@
 package controllers;
 
 import com.jfoenix.controls.*;
-import com.sun.org.apache.regexp.internal.RE;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -24,7 +23,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.interfaces.Shape;
 import models.shapes.Line;
-import models.shapes.Rectangle;
 import models.shapes.ShapesFactory;
 import models.shapes.Triangle;
 import com.google.common.collect.BiMap;
@@ -123,11 +121,11 @@ public class SampleController implements Initializable{
         selectedShapeLayout.setDisable(true);
         shapesListView.getSelectionModel().select(-1);
         selectedShapeLabel.setText("Selected Shape");
+        canvas.setOnMouseDragged(null);
         removeBoundingBox();
     }
 
     private void drawBoundingBox(List<Shape> shapes) {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
         double minX = canvas.getWidth();
         double minY = canvas.getHeight();
         double maxX = 0;
@@ -144,11 +142,8 @@ public class SampleController implements Initializable{
             if (x2 > maxX) maxX = x2;
             if (y2 > maxY) maxY = y2;
         }
-        gc.setStroke(Color.BLACK);
-        gc.setLineDashes(7);
-        gc.setLineWidth(1);
-        gc.strokeRect(minX - 5, minY - 5, maxX - minX + 10,maxY - minY + 10);
-
+        drawBoundingBoxLines(minX, minY, maxX, maxY);
+        addEditHandlersToCanvas(minX, minY, maxX, maxY);
         resetGraphicsContext();
     }
 
@@ -156,6 +151,85 @@ public class SampleController implements Initializable{
         refresh();
     }
 
+    private void drawBoundingBoxLines(double minX, double minY, double maxX, double maxY) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        gc.setStroke(Color.BLACK);
+        gc.setLineDashes(7);
+        gc.setLineWidth(1);
+        gc.strokeRect(minX - 5, minY - 5, maxX - minX + 10,maxY - minY + 10);
+
+        gc.setFill(Color.WHITE);
+        gc.setLineDashes(0);
+
+        gc.fillRect(minX - 10, minY - 10, 10, 10);
+        gc.strokeRect(minX - 10, minY - 10, 10, 10);
+
+        gc.fillRect(minX - 10, maxY, 10, 10);
+        gc.strokeRect(minX - 10, maxY, 10, 10);
+
+        gc.fillRect(maxX, minY - 10, 10, 10);
+        gc.strokeRect(maxX, minY - 10, 10, 10);
+
+        gc.fillRect(maxX, maxY, 10, 10);
+        gc.strokeRect(maxX, maxY, 10, 10);
+
+        gc.fillRect((maxX + minX)/2, minY - 10, 10, 10);
+        gc.strokeRect((maxX + minX)/2, minY - 10, 10, 10);
+
+        gc.fillRect((maxX + minX)/2, maxY, 10, 10);
+        gc.strokeRect((maxX + minX)/2, maxY, 10, 10);
+
+        gc.fillRect(minX - 10, (maxY + minY)/2, 10, 10);
+        gc.strokeRect(minX - 10, (maxY + minY)/2, 10, 10);
+
+        gc.fillRect(maxX, (maxY + minY)/2, 10, 10);
+        gc.strokeRect(maxX, (maxY + minY)/2, 10, 10);
+    }
+
+    private void addEditHandlersToCanvas(double minX, double minY, double maxX, double maxY) {
+        canvas.setOnMousePressed(click -> {
+            List<Shape> newShapes = new ArrayList<>();
+            List<Shape> oldShapes = selectedShapes();
+            if (click.getX() > minX && click.getX() < maxX && click.getY() > minY && click.getY() < maxY) {
+                System.out.println("inside!");
+                double originX = click.getX();
+                double originY = click.getY();
+                canvas.setOnMouseDragged(event -> {
+                    System.out.println("Dragging");
+                    double deltaX = event.getX() - originX;
+                    double deltaY = event.getY() - originY;
+                    try {
+                        for (Shape shape : oldShapes) {
+                            Shape newShape = (Shape) shape.clone();
+                            Map<String, Double> properties = new HashMap<>(shape.getProperties());
+                            for(String key : properties.keySet()) {
+                                if (key.charAt(0) == 'x') {
+                                    newShape.getProperties().replace(key, properties.get(key) + deltaX);
+                                }
+                                else if (key.charAt(0) == 'y') {
+                                    newShape.getProperties().replace(key, properties.get(key) + deltaY);
+                                }
+                            }
+                            newShapes.add(newShape);
+                        }
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                    for (Shape shapePreview : newShapes) painter.addShapePreview(shapePreview);
+                    refresh();
+                    for (Shape shapePreview : newShapes) painter.removeShapePreview(shapePreview);
+                    drawBoundingBoxLines(minX + deltaX, minY + deltaY, maxX + deltaX, maxY + deltaY);
+                });
+            }
+            canvas.setOnMouseReleased(event -> {
+                for (int i = 0; i < oldShapes.size(); i++) {
+                    painter.updateShape(oldShapes.get(i), newShapes.get(i));
+                }
+                canvas.setOnMouseDragged(null);
+            });
+        });
+    }
 
     @FXML
     void updateSelectedShapes() {
@@ -255,6 +329,7 @@ public class SampleController implements Initializable{
         } catch (Exception e) {
 
         }
+        shapesMap.clear();
         for (Shape shape : painter.getShapes()) {
             String shapeName = generateUniqueName(shape);
             shapesMap.put(shapeName, shape);
@@ -273,8 +348,13 @@ public class SampleController implements Initializable{
     @FXML
     void onCanvasClick(MouseEvent click) {
         Shape shape = null;
+        String toolSelected = toolsComboBox.getValue().getText();
+
+        if (toolSelected == "Edit") {
+            return;
+        }
         try {
-            shape = factory.createShape(toolsComboBox.getValue().getText());
+            shape = factory.createShape(toolSelected);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -286,7 +366,7 @@ public class SampleController implements Initializable{
                 clickHistory.add(new Point2D(click.getX(), click.getY()));
             } else {
                 clickHistory.add(new Point2D(click.getX(), click.getY()));
-                Map<String, Double> properties = new HashMap<String, Double>();
+                Map<String, Double> properties = new HashMap<>();
                 properties.put("x1", clickHistory.get(0).getX());
                 properties.put("y1", clickHistory.get(0).getY());
                 properties.put("x2", clickHistory.get(1).getX());
@@ -351,7 +431,6 @@ public class SampleController implements Initializable{
         addShape(shape);
         canvas.setOnMouseReleased(event -> {
             canvas.setOnMouseDragged(null);
-            System.out.println("aszxqw");
         });
     }
 
@@ -404,7 +483,8 @@ public class SampleController implements Initializable{
 
     private void initializeTools() {
         List<Class<? extends Shape>> shapeClasses = painter.getSupportedShapes();
-
+        toolsComboBox.getItems().add(new Label("Edit"));
+        toolsComboBox.getSelectionModel().select(0);
         for (Class<? extends Shape> shapeClass : shapeClasses) {
             toolsComboBox.getItems().add(new Label(shapeClass.getSimpleName()));
         }
