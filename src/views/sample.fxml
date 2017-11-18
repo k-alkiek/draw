@@ -42,6 +42,7 @@
                   <MenuItem mnemonicParsing="false" text="Redo" />
                   <Menu fx:id="shapesMenu" mnemonicParsing="false" text="Draw Shape" />
                   <MenuItem mnemonicParsing="false" text="Delete" />
+                  <MenuItem fx:id="refresh" mnemonicParsing="false" text="Refresh" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="About">
@@ -55,7 +56,7 @@
          <children>
             <BorderPane prefHeight="555.0" prefWidth="887.0" style="-fx-background-color: #616161;" AnchorPane.bottomAnchor="-43.0">
                <center>
-                  <Canvas fx:id="canvas" height="458.0" onMouseExited="#hideCoordinates" onMouseMoved="#showCoordinates" onMousePressed="#onCanvasClick" width="592.0" />
+                  <Canvas fx:id="canvas" height="458.0" onMouseExited="#hideCoordinates" onMouseMoved="#showCoordinates" width="592.0" />
                </center>
                <top>
                   <ToolBar prefHeight="46.0" prefWidth="819.0" BorderPane.alignment="CENTER">

@@ -96,6 +96,11 @@ public class SampleController implements Initializable{
     @FXML
     void onShapeSelect() {
         refresh();
+        toolsComboBox.getSelectionModel().select(0);
+        highlightShapes();
+    }
+
+    private void highlightShapes() {
         if (selectedShapes().size() == 1) {
             selectedShapeLayout.setDisable(false);
             Shape shape = selectedShapes().get(0);
@@ -114,6 +119,10 @@ public class SampleController implements Initializable{
         else {
             deselectShapes();
         }
+    }
+    @FXML
+    void test() {
+        System.out.println("asd");
     }
 
     @FXML
@@ -188,33 +197,36 @@ public class SampleController implements Initializable{
     }
 
     private void addEditHandlersToCanvas(double minX, double minY, double maxX, double maxY) {
+
         canvas.setOnMousePressed(click -> {
             List<Shape> newShapes = new ArrayList<>();
             List<Shape> oldShapes = selectedShapes();
             if (click.getX() > minX && click.getX() < maxX && click.getY() > minY && click.getY() < maxY) {
-                System.out.println("inside!");
                 double originX = click.getX();
                 double originY = click.getY();
+
+                try {
+                    for (Shape shape : oldShapes) {
+                        newShapes.add((Shape) shape.clone());
+                    }
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
                 canvas.setOnMouseDragged(event -> {
-                    System.out.println("Dragging");
                     double deltaX = event.getX() - originX;
                     double deltaY = event.getY() - originY;
-                    try {
-                        for (Shape shape : oldShapes) {
-                            Shape newShape = (Shape) shape.clone();
-                            Map<String, Double> properties = new HashMap<>(shape.getProperties());
-                            for(String key : properties.keySet()) {
-                                if (key.charAt(0) == 'x') {
-                                    newShape.getProperties().replace(key, properties.get(key) + deltaX);
-                                }
-                                else if (key.charAt(0) == 'y') {
-                                    newShape.getProperties().replace(key, properties.get(key) + deltaY);
-                                }
+                    for (int i = 0; i < newShapes.size(); i++) {
+                        Shape shape = newShapes.get(i);
+                        Shape oldShape = oldShapes.get(i);
+                        Map<String, Double> properties = new HashMap<>(shape.getProperties());
+                        for(String key : properties.keySet()) {
+                            if (key.charAt(0) == 'x') {
+                                shape.getProperties().replace(key, oldShape.getProperties().get(key) + deltaX);
                             }
-                            newShapes.add(newShape);
+                            else if (key.charAt(0) == 'y') {
+                                shape.getProperties().replace(key, oldShape.getProperties().get(key) + deltaY);
+                            }
                         }
-                    } catch (CloneNotSupportedException e) {
-                        e.printStackTrace();
                     }
                     for (Shape shapePreview : newShapes) painter.addShapePreview(shapePreview);
                     refresh();
@@ -224,9 +236,16 @@ public class SampleController implements Initializable{
             }
             canvas.setOnMouseReleased(event -> {
                 for (int i = 0; i < oldShapes.size(); i++) {
+                    Shape oldShape = oldShapes.get(i);
+                    Shape newShape = newShapes.get(i);
                     painter.updateShape(oldShapes.get(i), newShapes.get(i));
+
+                    String shapeName = generateUniqueName(newShape);
+                    shapesMap.put(shapeName, newShape);
                 }
                 canvas.setOnMouseDragged(null);
+                refreshShapeList();
+                refresh();
             });
         });
     }
@@ -265,16 +284,24 @@ public class SampleController implements Initializable{
 
     @FXML
     void cloneSelectedShapes() {
+        List<Shape> clonedShapes = new ArrayList<>();
         for (Shape shape: selectedShapes()) {
+            Shape newShape;
             try {
-                addShape((Shape)shape.clone());
+                newShape = (Shape) shape.clone();
+                clonedShapes.add(newShape);
+                addShape(newShape);
             } catch (CloneNotSupportedException e) {
                 continue;
             }
+
         }
-        deselectShapes();
         refresh();
+        deselectShapes();
         refreshShapeList();
+        for (Shape clonedShape : clonedShapes) {
+            selectShapeByName(shapesMap.inverse().get(clonedShape));
+        }
     }
 
     @FXML
@@ -346,47 +373,47 @@ public class SampleController implements Initializable{
 
 
     @FXML
-    void onCanvasClick(MouseEvent click) {
-        Shape shape = null;
-        String toolSelected = toolsComboBox.getValue().getText();
+    void listenForUserDrawing() {
+        canvas.setOnMousePressed(click -> {
 
-        if (toolSelected == "Edit") {
-            return;
-        }
-        try {
-            shape = factory.createShape(toolSelected);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        }
+            Shape shape = null;
+            String toolSelected = toolsComboBox.getValue().getText();
 
-        if (shape instanceof Triangle) {
-            if (clickHistory.size() < 2) {
-                clickHistory.add(new Point2D(click.getX(), click.getY()));
-            } else {
-                clickHistory.add(new Point2D(click.getX(), click.getY()));
-                Map<String, Double> properties = new HashMap<>();
-                properties.put("x1", clickHistory.get(0).getX());
-                properties.put("y1", clickHistory.get(0).getY());
-                properties.put("x2", clickHistory.get(1).getX());
-                properties.put("y2", clickHistory.get(1).getY());
-                properties.put("x3", clickHistory.get(2).getX());
-                properties.put("y3", clickHistory.get(2).getY());
-                properties.put("borderWidth", strokeSlider.getValue());
-
-                shape.setProperties(properties);
-                setShapeColors(shape);
-                addShape(shape);
-                painter.refresh(canvas.getGraphicsContext2D());
-                clickHistory.clear();
+            try {
+                shape = factory.createShape(toolSelected);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
             }
-        }
-        else {
-            clickHistory.clear();
-            Point2D originPoint = new Point2D(click.getX(), click.getY());
-            canvasDrag(shape, originPoint);
-        }
+
+            if (shape instanceof Triangle) {
+                if (clickHistory.size() < 2) {
+                    clickHistory.add(new Point2D(click.getX(), click.getY()));
+                } else {
+                    clickHistory.add(new Point2D(click.getX(), click.getY()));
+                    Map<String, Double> properties = new HashMap<>();
+                    properties.put("x1", clickHistory.get(0).getX());
+                    properties.put("y1", clickHistory.get(0).getY());
+                    properties.put("x2", clickHistory.get(1).getX());
+                    properties.put("y2", clickHistory.get(1).getY());
+                    properties.put("x3", clickHistory.get(2).getX());
+                    properties.put("y3", clickHistory.get(2).getY());
+                    properties.put("borderWidth", strokeSlider.getValue());
+
+                    shape.setProperties(properties);
+                    setShapeColors(shape);
+                    addShape(shape);
+                    painter.refresh(canvas.getGraphicsContext2D());
+                    clickHistory.clear();
+                }
+            }
+            else {
+                clickHistory.clear();
+                Point2D originPoint = new Point2D(click.getX(), click.getY());
+                canvasDrag(shape, originPoint);
+            }
+        });
     }
 
     private void canvasDrag(Shape shape, Point2D originPoint) {
@@ -492,6 +519,17 @@ public class SampleController implements Initializable{
 
     @FXML
     void onToolSelected() {
+        canvas.setOnMouseDragged(null);
+        canvas.setOnMouseReleased(null);
+
+        String tool = toolsComboBox.getSelectionModel().getSelectedItem().getText();
+
+        if (tool == "Edit" && selectedShapes().size() > 0) {
+            highlightShapes();
+        }
+        else if (tool != "Edit") {
+            listenForUserDrawing();
+        }
         clickHistory.clear();
     }
 
@@ -542,9 +580,14 @@ public class SampleController implements Initializable{
         refreshShapeList();
     }
 
-    private void refresh() {
+    @FXML
+    void refresh() {
         clear();
         painter.refresh(canvas.getGraphicsContext2D());
+    }
+
+    private String selectedTool() {
+        return toolsComboBox.getSelectionModel().getSelectedItem().getText();
     }
 
     private void resetGraphicsContext() {
@@ -558,6 +601,12 @@ public class SampleController implements Initializable{
         shapesListView.getItems().clear();
         for (Shape shape : painter.getShapes()) {
             shapesListView.getItems().add(0, new Label(shapesMap.inverse().get(shape)));
+        }
+    }
+
+    private void selectShapeByName(String name) {
+        for (Label item : shapesListView.getItems()) {
+            if (item.getText() == name) shapesListView.getSelectionModel().select(item);
         }
     }
 
