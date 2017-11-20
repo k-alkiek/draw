@@ -83,7 +83,7 @@ public abstract class AbstractShape implements Shape, Serializable {
         Map<String, Double> newShapeProps = new HashMap<>();
         for(String key : shapeProperties.keySet()) {
             if (key.charAt(0) == 'x' || key.charAt(0) == 'y')
-                newShapeProps.put(key, shapeProperties.get(key) + 20);
+                newShapeProps.put(key, shapeProperties.get(key) + 0);
             else
                 newShapeProps.put(key, shapeProperties.get(key));
         }
