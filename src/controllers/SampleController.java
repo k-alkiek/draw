@@ -38,6 +38,7 @@ public class SampleController implements Initializable{
     private ShapesFactory factory = new ShapesFactory();
     private BiMap<String, Shape> shapesMap;
     List<Point2D> clickHistory = new ArrayList<Point2D>();
+    private ArrayList<Class<? extends Shape>> extentions;
 
     @FXML private Canvas canvas;
 
@@ -71,6 +72,7 @@ public class SampleController implements Initializable{
         painter = Painter.getInstanceOfPainter();
         shapesMap = HashBiMap.create();
         filePath = null;
+        extentions = new ArrayList<>();
         initializeStrokePreview();
         initializeTools();
         initializeBadges();
@@ -495,11 +497,35 @@ public class SampleController implements Initializable{
         MenuItem shapeMenuItem = new MenuItem(shapeClass.getSimpleName());
         shapeMenuItem.setOnAction(event -> {
             try {
-                Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("views/new_shape.fxml"));
-                Stage stage = new Stage();
-                stage.setTitle("New " + shapeClass.getSimpleName());
-                stage.setScene(new Scene(root));
-                stage.show();
+                boolean isSupported = !(extentions.contains(shapeClass));
+                Map<String, Double> map = newShapeController.setProps(shapeClass.newInstance(), isSupported);
+
+                canvas.setOnMousePressed(click -> {
+                    Shape shape = null;
+                    try {
+                        shape = shapeClass.newInstance();
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    if (isSupported) {
+                        Map<String, Double> temp = new HashMap<>();
+                        temp.put("x1", click.getX());
+                        temp.put("y1", click.getY());
+                        temp.put("x2", click.getX() + map.get("height"));
+                        temp.put("y2", click.getY() + map.get("width"));
+                        temp.put("borderWidth", strokeSlider.getValue());
+                        shape.setProperties(temp);
+                    } else {
+                        shape.setProperties(map);
+                    }
+                    shape.setPosition(new Point2D(click.getX(), click.getY()));
+                    shape.setColor(strokeColorPicker.getValue());
+                    shape.setFillColor(fillColorPicker.getValue());
+                    addShape(shape);
+                    painter.refresh(canvas.getGraphicsContext2D());
+                });
             } catch(Exception e) {
                 e.printStackTrace();
             }
