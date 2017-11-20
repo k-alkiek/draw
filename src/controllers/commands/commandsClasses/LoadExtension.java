@@ -24,14 +24,14 @@ public class LoadExtension {
     public List<Class<? extends Shape>> addExtension() throws IOException, ClassNotFoundException {
         List<Class<? extends Shape>> extensions = new ArrayList<>();
         JarFile jarFile = new JarFile(path);
-        Enumeration<JarEntry> e = jarFile.entries();
+        Enumeration<JarEntry> enumeration = jarFile.entries();
 
         URL[] urls = { new URL("jar:file:" + path +"!/") };
         URLClassLoader classLoader = URLClassLoader.newInstance(urls);
 
-        while(e.hasMoreElements()) {
-            JarEntry jarEntry = e.nextElement();
-            if(jarEntry.isDirectory() || !jarEntry.getName().endsWith(".class")){
+        while(enumeration.hasMoreElements()) {
+            JarEntry jarEntry = enumeration.nextElement();
+            if(jarEntry.isDirectory() || !jarEntry.getName().endsWith(".class")) {
                 continue;
             }
             String className = jarEntry.getName().substring(0, jarEntry.getName().length() - 6);
