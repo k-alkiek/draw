@@ -38,11 +38,11 @@
           <Menu mnemonicParsing="false" text="Edit">
               <items>
 
-                <MenuItem mnemonicParsing="false" text="Undo" />
-                  <MenuItem mnemonicParsing="false" text="Redo" />
+                <MenuItem mnemonicParsing="false" onAction="#undo" text="Undo" />
+                  <MenuItem mnemonicParsing="false" onAction="#redo" text="Redo" />
                   <Menu fx:id="shapesMenu" mnemonicParsing="false" text="Draw Shape" />
-                  <MenuItem mnemonicParsing="false" text="Delete" />
-                  <MenuItem fx:id="refresh" mnemonicParsing="false" text="Refresh" />
+                  <MenuItem mnemonicParsing="false" onAction="#deleteSelectedShapes" text="Delete" />
+                  <MenuItem fx:id="refresh" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="About">
