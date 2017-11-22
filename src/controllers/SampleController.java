@@ -1,6 +1,7 @@
 package controllers;
 
 import com.jfoenix.controls.*;
+import controllers.commands.commandsClasses.LoadExtension;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -560,6 +561,21 @@ public class SampleController implements Initializable{
     }
 
     @FXML
+    void importPlugin() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Plugin JAR");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JAR File", "*.jar"));
+        try {
+            filePath = fileChooser.showOpenDialog(new Stage()).getPath();
+            painter.load(filePath);
+        } catch (Exception e) {
+
+        }
+        LoadExtension loadExtension = new LoadExtension(filePath);
+        refresh();
+    }
+
+    @FXML
     void exit() {
         Platform.exit();
     }
@@ -569,6 +585,7 @@ public class SampleController implements Initializable{
     @FXML
     void listenForUserDrawing() {
         canvas.setOnMousePressed(click -> {
+
 
             Shape shape = null;
             String toolSelected = toolsComboBox.getValue().getText();
@@ -619,6 +636,8 @@ public class SampleController implements Initializable{
         setShapeColors(shape);
 //        EventHandler<? super MouseEvent> drag =  canvas.getOnMouseDragged();
         canvas.setOnMouseDragged(mouseEvent->{
+            xLabel.setText("" + mouseEvent.getX());
+            yLabel.setText("" + mouseEvent.getY());
             if ( shape instanceof Line || (mouseEvent.getX() >= originPoint.getX() && mouseEvent.getY() >= originPoint.getY())) {
                 properties.put("x1", originPoint.getX());
                 properties.put("y1", originPoint.getY());
