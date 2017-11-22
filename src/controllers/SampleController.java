@@ -776,10 +776,10 @@ public class SampleController implements Initializable{
                         shape.setProperties(map);
                     }
                     shape.setPosition(new Point2D(click.getX(), click.getY()));
-                    shape.setColor(strokeColorPicker.getValue());
-                    shape.setFillColor(fillColorPicker.getValue());
+                    setShapeColors(shape);
                     addShape(shape);
-                    painter.refresh(canvas.getGraphicsContext2D());
+                    refreshShapeList();
+                    refresh();
                 });
             } catch(Exception e) {
                 e.printStackTrace();
