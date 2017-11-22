@@ -24,6 +24,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.interfaces.Shape;
 import models.shapes.Line;
+import models.shapes.Polygon;
 import models.shapes.ShapesFactory;
 import models.shapes.Triangle;
 import com.google.common.collect.BiMap;
@@ -615,7 +616,30 @@ public class SampleController implements Initializable{
                     shape.setProperties(properties);
                     setShapeColors(shape);
                     addShape(shape);
-                    painter.refresh(canvas.getGraphicsContext2D());
+                    refreshShapeList();
+                    refresh();
+                    clickHistory.clear();
+                }
+            }
+            else if (shape instanceof Polygon) {
+//                Polygon polygon = new Polygon()
+                int n = 5;
+                if (clickHistory.size() < n - 1) {
+                    clickHistory.add(new Point2D(click.getX(), click.getY()));
+                } else {
+                    clickHistory.add(new Point2D(click.getX(), click.getY()));
+                    double[] x = new double[clickHistory.size()];
+                    double[] y = new double[clickHistory.size()];
+                    for (int i = 0; i < clickHistory.size(); i++) {
+                        x[i] = clickHistory.get(i).getX();
+                        y[i] = clickHistory.get(i).getY();
+                    }
+                    Polygon polygon = new Polygon(n, x, y);
+                    polygon.getProperties().put("borderWidth", strokeSlider.getValue());
+                    setShapeColors(polygon);
+                    addShape(polygon);
+                    refreshShapeList();
+                    refresh();
                     clickHistory.clear();
                 }
             }
@@ -748,10 +772,13 @@ public class SampleController implements Initializable{
     private void initializeTools() {
         List<Class<? extends Shape>> shapeClasses = painter.getSupportedShapes();
         toolsComboBox.getItems().add(new Label("Edit"));
+        toolsComboBox.getItems().add(new Label("Line"));
+        toolsComboBox.getItems().add(new Label("Rectangle"));
+        toolsComboBox.getItems().add(new Label("Ellipse"));
+        toolsComboBox.getItems().add(new Label("RoundRectangle"));
+        toolsComboBox.getItems().add(new Label("Triangle"));
+        toolsComboBox.getItems().add(new Label("Polygon"));
         toolsComboBox.getSelectionModel().select(0);
-        for (Class<? extends Shape> shapeClass : shapeClasses) {
-            toolsComboBox.getItems().add(new Label(shapeClass.getSimpleName()));
-        }
     }
 
     @FXML
