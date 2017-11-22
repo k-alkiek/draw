@@ -263,10 +263,8 @@ public class SampleController implements Initializable{
             else if (click.getX() > maxX && click.getX() < maxX + 10 && click.getY() > minY - 10 && click.getY() < minY) { //scale from top-right
                 System.out.println("Top Right Corner");
                 canvas.setOnMouseDragged(event -> {
-                    double deltaX = event.getX() - minX;
-                    double deltaY = event.getY() - minY;
-                    double scaleX = event.getX() / maxX;
-                    double scaleY = event.getY() / minY;
+                    double scaleX = (event.getX() - minX ) / (maxX - minX);
+                    double scaleY = (event.getY() - maxY) / (minY - maxY);
                     for (int i = 0; i < newShapes.size(); i++) {
                         Shape shape = newShapes.get(i);
                         Shape oldShape = oldShapes.get(i);
@@ -274,24 +272,42 @@ public class SampleController implements Initializable{
                         for(String key : properties.keySet()) {
                             if (key.charAt(0) == 'x') {
                                 double oldX = oldShape.getProperties().get(key);
-                                shape.getProperties().replace(key, oldX * scaleX - maxX * scaleX + maxX);
-                            }
-                            else if (key.charAt(0) == 'y') {
+                                shape.getProperties().replace(key, oldX * scaleX - (minX) * scaleX + minX);
+                            } else if (key.charAt(0) == 'y') {
                                 double oldY = oldShape.getProperties().get(key);
-                                shape.getProperties().replace(key, oldY * scaleY - minY * scaleY + minY);
+                                shape.getProperties().replace(key, oldY * scaleY - maxY* scaleY + maxY);
                             }
                         }
                     }
                     for (Shape shapePreview : newShapes) painter.addShapePreview(shapePreview);
                     refresh();
                     for (Shape shapePreview : newShapes) painter.removeShapePreview(shapePreview);
-                    drawBoundingBoxLines(minX * scaleX, minY * scaleY, maxX, maxY);
+                    drawBoundingBoxLines(minX, event.getY(), event.getX(), maxY);
                 });
             }
-            else if (click.getX() > minX - 10 && click.getX() < minX && click.getY() > minY - 10 && click.getY() < minY) {
-                System.out.println("Corner");
+            else if (click.getX() > minX - 10 && click.getX() < minX && click.getY() > maxY && click.getY() < maxY + 10) { //scale from bottom-left
+                System.out.println("Top Right Corner");
                 canvas.setOnMouseDragged(event -> {
-
+                    double scaleX = (event.getX() - maxX ) / (minX - maxX);
+                    double scaleY = (event.getY() - minY) / (maxY - minY);
+                    for (int i = 0; i < newShapes.size(); i++) {
+                        Shape shape = newShapes.get(i);
+                        Shape oldShape = oldShapes.get(i);
+                        Map<String, Double> properties = new HashMap<>(shape.getProperties());
+                        for(String key : properties.keySet()) {
+                            if (key.charAt(0) == 'x') {
+                                double oldX = oldShape.getProperties().get(key);
+                                shape.getProperties().replace(key, oldX * scaleX - (maxX) * scaleX + maxX);
+                            } else if (key.charAt(0) == 'y') {
+                                double oldY = oldShape.getProperties().get(key);
+                                shape.getProperties().replace(key, oldY * scaleY - minY* scaleY + minY);
+                            }
+                        }
+                    }
+                    for (Shape shapePreview : newShapes) painter.addShapePreview(shapePreview);
+                    refresh();
+                    for (Shape shapePreview : newShapes) painter.removeShapePreview(shapePreview);
+                    drawBoundingBoxLines(event.getX(), minY, maxX, event.getY());
                 });
             }
             else if (click.getX() > maxX && click.getX() < maxX + 10 && click.getY() > maxY && click.getY() < maxY + 10) { //scale from bottom right
@@ -319,6 +335,86 @@ public class SampleController implements Initializable{
                     drawBoundingBoxLines(minX, minY, event.getX(), event.getY());
                 });
             }
+            else if (click.getX() > (maxX + minX)/2 && click.getX() < (maxX + minX)/2 + 10 && click.getY() > minY - 10 && click.getY() < minY ) { //scale from top
+                canvas.setOnMouseDragged(event -> {
+                    double scaleY = (event.getY() - maxY) / (minY - maxY);
+                    for (int i = 0; i < newShapes.size(); i++) {
+                        Shape shape = newShapes.get(i);
+                        Shape oldShape = oldShapes.get(i);
+                        Map<String, Double> properties = new HashMap<>(shape.getProperties());
+                        for(String key : properties.keySet()) {
+                            if (key.charAt(0) == 'y') {
+                                double oldY = oldShape.getProperties().get(key);
+                                shape.getProperties().replace(key, oldY * scaleY - maxY * scaleY + maxY);
+                            }
+                        }
+                    }
+                    for (Shape shapePreview : newShapes) painter.addShapePreview(shapePreview);
+                    refresh();
+                    for (Shape shapePreview : newShapes) painter.removeShapePreview(shapePreview);
+                    drawBoundingBoxLines(minX, event.getY(), maxX, maxY);
+                });
+            }
+            else if (click.getX() > (maxX + minX)/2 && click.getX() < (maxX + minX)/2 + 10 && click.getY() > maxY && click.getY() < maxY + 10 ) { //scale from top
+                canvas.setOnMouseDragged(event -> {
+                    double scaleY = (event.getY() - minY) / (maxY - minY);
+                    for (int i = 0; i < newShapes.size(); i++) {
+                        Shape shape = newShapes.get(i);
+                        Shape oldShape = oldShapes.get(i);
+                        Map<String, Double> properties = new HashMap<>(shape.getProperties());
+                        for(String key : properties.keySet()) {
+                            if (key.charAt(0) == 'y') {
+                                double oldY = oldShape.getProperties().get(key);
+                                shape.getProperties().replace(key, oldY * scaleY - minY * scaleY + minY);
+                            }
+                        }
+                    }
+                    for (Shape shapePreview : newShapes) painter.addShapePreview(shapePreview);
+                    refresh();
+                    for (Shape shapePreview : newShapes) painter.removeShapePreview(shapePreview);
+                    drawBoundingBoxLines(minX, minY, maxX, event.getY());
+                });
+            }
+            else if (click.getX() > maxX && click.getX() < maxX + 10 && click.getY() > (maxY + minY)/2 && click.getY() < (maxY + minY)/2 + 10 ) { //scale from right
+                canvas.setOnMouseDragged(event -> {
+                    double scaleX = (event.getX() - minX) / (maxX - minX);
+                    for (int i = 0; i < newShapes.size(); i++) {
+                        Shape shape = newShapes.get(i);
+                        Shape oldShape = oldShapes.get(i);
+                        Map<String, Double> properties = new HashMap<>(shape.getProperties());
+                        for(String key : properties.keySet()) {
+                            if (key.charAt(0) == 'x') {
+                                double oldX = oldShape.getProperties().get(key);
+                                shape.getProperties().replace(key, oldX * scaleX - minX * scaleX + minX);
+                            }
+                        }
+                    }
+                    for (Shape shapePreview : newShapes) painter.addShapePreview(shapePreview);
+                    refresh();
+                    for (Shape shapePreview : newShapes) painter.removeShapePreview(shapePreview);
+                    drawBoundingBoxLines(minX, minY, event.getX(), maxY);
+                });
+            }
+            else if (click.getX() > minX - 10 && click.getX() < minX && click.getY() > (maxY + minY)/2 && click.getY() < (maxY + minY)/2 + 10 ) { //scale from right
+                canvas.setOnMouseDragged(event -> {
+                    double scaleX = (event.getX() - maxX) / (minX - maxX);
+                    for (int i = 0; i < newShapes.size(); i++) {
+                        Shape shape = newShapes.get(i);
+                        Shape oldShape = oldShapes.get(i);
+                        Map<String, Double> properties = new HashMap<>(shape.getProperties());
+                        for(String key : properties.keySet()) {
+                            if (key.charAt(0) == 'x') {
+                                double oldX = oldShape.getProperties().get(key);
+                                shape.getProperties().replace(key, oldX * scaleX - maxX * scaleX + maxX);
+                            }
+                        }
+                    }
+                    for (Shape shapePreview : newShapes) painter.addShapePreview(shapePreview);
+                    refresh();
+                    for (Shape shapePreview : newShapes) painter.removeShapePreview(shapePreview);
+                    drawBoundingBoxLines(event.getX(), minY, maxX, maxY);
+                });
+            }
             canvas.setOnMouseReleased(event -> {
                 for (int i = 0; i < oldShapes.size(); i++) {
                     Shape oldShape = oldShapes.get(i);
@@ -331,16 +427,23 @@ public class SampleController implements Initializable{
                 canvas.setOnMouseDragged(null);
                 refreshShapeList();
                 refresh();
+
+                for (Shape clonedShape : newShapes) {
+                    selectShapeByName(shapesMap.inverse().get(clonedShape));
+                }
+                drawBoundingBox(newShapes);
             });
         });
     }
 
     @FXML
     void updateSelectedShapes() {
+        List<Shape> newShapes = new ArrayList<>();
         for (Shape shape: selectedShapes()) {
             Shape newShape;
             try {
                 newShape = shape.getClass().newInstance();
+                newShapes.add(newShape);
             } catch (Exception e) {
                 return;
             }
@@ -354,6 +457,11 @@ public class SampleController implements Initializable{
 
             refreshShapeList();
             refresh();
+
+            for (Shape clonedShape : newShapes) {
+                selectShapeByName(shapesMap.inverse().get(clonedShape));
+            }
+            drawBoundingBox(newShapes);
         }
     }
 
@@ -387,6 +495,7 @@ public class SampleController implements Initializable{
         for (Shape clonedShape : clonedShapes) {
             selectShapeByName(shapesMap.inverse().get(clonedShape));
         }
+        drawBoundingBox(clonedShapes);
     }
 
     @FXML
