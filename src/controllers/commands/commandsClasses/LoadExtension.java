@@ -3,6 +3,7 @@ package controllers.commands.commandsClasses;
 import models.interfaces.Shape;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -37,7 +38,8 @@ public class LoadExtension {
             String className = jarEntry.getName().substring(0, jarEntry.getName().length() - 6);
             className = className.replace('/', '.');
             Class newClass = classLoader.loadClass(className);
-            if (newClass != Shape.class && Shape.class.isAssignableFrom(newClass))
+            if (newClass != Shape.class && Shape.class.isAssignableFrom(newClass)
+                    && !Modifier.isAbstract(newClass.getModifiers()))
                 extensions.add(newClass);
         }
         return extensions;

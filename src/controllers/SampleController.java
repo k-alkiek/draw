@@ -30,6 +30,7 @@ import models.shapes.Triangle;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
@@ -573,6 +574,21 @@ public class SampleController implements Initializable{
 
         }
         LoadExtension loadExtension = new LoadExtension(filePath);
+        try {
+            System.out.println(loadExtension.addExtension().size());
+            extentions.addAll(loadExtension.addExtension());
+            for (Class<? extends Shape> shapeClass : extentions) {
+                String shapeName = shapeClass.getSimpleName();
+                MenuItem shapeMenuItem = setupShapeMenuItem(shapeClass);
+
+
+                shapesMenu.getItems().add(shapeMenuItem);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         refresh();
     }
 
@@ -732,7 +748,11 @@ public class SampleController implements Initializable{
         MenuItem shapeMenuItem = new MenuItem(shapeClass.getSimpleName());
         shapeMenuItem.setOnAction(event -> {
             try {
-                boolean isSupported = !(extentions.contains(shapeClass));
+                boolean isSupported = !(extentions.contains(shapeClass)) &&
+                        ! shapeClass.getSimpleName().equals("Line") &&
+                        ! shapeClass.getSimpleName().equals("Triangle") &&
+                        ! shapeClass.getSimpleName().equals("Polygon");
+
                 Map<String, Double> map = newShapeController.setProps(shapeClass.newInstance(), isSupported);
 
                 canvas.setOnMousePressed(click -> {
